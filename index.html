@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short Video Portfolio | 作品集</title>
+    <title>ROCK Studio｜短影音作品集</title>
     
     <!-- 字型：Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,6 @@
                     },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'slide-down': 'slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     boxShadow: {
                         'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
@@ -75,10 +74,6 @@
             0% { opacity: 0; transform: scale(0.98); }
             100% { opacity: 1; transform: scale(1); }
         }
-        @keyframes slideDown {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 dark:bg-[#0f0f0f] dark:text-gray-200 min-h-screen flex flex-col font-sans antialiased">
@@ -104,17 +99,7 @@
         </div>
     </nav>
 
-    <!-- 客製化歡迎橫幅 (預設隱藏，透過 JS 觸發) -->
-    <div id="highlight-banner" class="hidden w-full bg-brand-accent/10 border-b border-brand-accent/20 animate-slide-down">
-        <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center gap-3 text-sm text-brand-accent">
-            <i data-lucide="sparkles" class="w-4 h-4 fill-current"></i>
-            <div>
-                <span class="font-bold">專屬精選：</span>
-                <span id="highlight-text" class="font-medium"></span>
-                <span class="opacity-70 ml-1">相關作品已為您優先排序</span>
-            </div>
-        </div>
-    </div>
+    <!-- 已移除歡迎橫幅，保持低調 -->
 
     <!-- 主要內容區 -->
     <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
@@ -122,11 +107,8 @@
         <!-- 標頭簡介 -->
         <header class="mb-10 text-center md:text-left animate-fade-in-up">
             <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">
-                精選短影音作品
+                短影音精選作品
             </h1>
-            <p class="text-slate-500 dark:text-gray-400 text-base max-w-2xl mx-auto md:mx-0 leading-relaxed">
-                專注於視覺節奏與品牌敘事。點擊下方作品即可觀看完整內容。
-            </p>
         </header>
 
         <!-- 控制工具列 -->
@@ -150,8 +132,6 @@
                             <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                         </div>
                     </div>
-
-                    <!-- 產生連結按鈕已移除 -->
                 </div>
 
                 <!-- 檢視模式切換 (手機隱藏) -->
@@ -276,7 +256,7 @@
         let currentView = 'grid'; 
         let currentSort = 'date';
         
-        // 解析 URL 參數 (看看有沒有 ?h=xxx)
+        // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
         // 支援參數名: 'h', 'highlight', 'q', 'tag'
         const highlightParam = urlParams.get('h') || urlParams.get('highlight') || urlParams.get('q') || urlParams.get('tag');
@@ -288,9 +268,6 @@
         const btnTable = document.getElementById('view-table');
         const sortSelect = document.getElementById('sort-select');
         const themeToggle = document.getElementById('theme-toggle');
-        // const shareBtn = document.getElementById('share-btn'); // Removed
-        const banner = document.getElementById('highlight-banner');
-        const bannerText = document.getElementById('highlight-text');
         const htmlElement = document.documentElement;
 
         // ==========================================
@@ -328,27 +305,24 @@
         }
 
         // ==========================================
-        // 排序邏輯 (核心：包含置頂功能)
+        // 排序邏輯 (隱形置頂)
         // ==========================================
         function sortItems() {
             items.sort((a, b) => {
-                // 1. 優先處理置頂 (Highlight)
+                // 1. 優先處理置頂 (Highlight) - 這是秘密進行的
                 if (highlightParam) {
                     const keyword = highlightParam.toLowerCase();
-                    // 檢查是否符合關鍵字 (檢查 客戶名稱 或 類別)
                     const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
                     const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
 
-                    // 如果 a 符合但 b 不符合，a 排前面 (-1)
                     if (aMatch && !bMatch) return -1;
-                    // 如果 b 符合但 a 不符合，b 排前面 (1)
                     if (!aMatch && bMatch) return 1;
-                    // 如果都符合或都不符合，進入下方標準排序
+                    // 如果都符合或都不符合，繼續往下比較
                 }
 
                 // 2. 標準排序
                 switch (currentSort) {
-                    case 'featured': // 精選優先 (預設行為與日期相同，因為上方 highlightParam 已處理置頂)
+                    case 'featured': // 相關優先 (其實內部邏輯跟日期一樣，只是有加上面的置頂)
                     case 'date': return new Date(b.date) - new Date(a.date);
                     case 'views': 
                         let vA = (typeof a.views === 'number') ? a.views : -1;
@@ -386,20 +360,11 @@
             gridWrapper.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 pb-10';
 
             items.forEach((item, index) => {
-                // 檢查此項目是否為被 Highlight 的項目
-                let isHighlighted = false;
-                if (highlightParam) {
-                    const keyword = highlightParam.toLowerCase();
-                    isHighlighted = (item.client && item.client.toLowerCase().includes(keyword)) || (item.category && item.category.toLowerCase().includes(keyword));
-                }
-
                 const card = document.createElement('div');
-                // 如果是 Highlight 項目，加一個特殊的金色邊框或陰影
-                const highlightClass = isHighlighted ? 'ring-2 ring-brand-accent shadow-xl scale-[1.02]' : 'shadow-card hover:shadow-card-hover';
+                // 移除所有關於 isHighlighted 的視覺標記，保持低調
                 
-                card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 ${highlightClass}`;
+                card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 shadow-card hover:shadow-card-hover`;
                 
-                // 動畫延遲
                 card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
                 card.style.opacity = '0';
 
@@ -424,7 +389,6 @@
                              <span class="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] font-bold text-white tracking-wider uppercase border border-white/10">
                                 ${item.category}
                             </span>
-                             ${isHighlighted ? `<span class="px-2.5 py-1 bg-brand-accent text-white rounded-md text-[10px] font-bold shadow-lg flex items-center gap-1"><i data-lucide="star" class="w-3 h-3 fill-current"></i>精選</span>` : ''}
                         </div>
                     </a>
 
@@ -467,7 +431,7 @@
         function renderTableView() {
             const tableWrapper = document.createElement('div');
             tableWrapper.className = 'w-full animate-fade-in-up bg-white dark:bg-[#151515] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden';
-            // ... (Table view code same as before but uses sorted items) ...
+
              let html = `
                 <div class="w-full overflow-x-auto no-scrollbar">
                     <table class="w-full text-left border-collapse">
@@ -488,13 +452,8 @@
                 const viewsFormatted = formatNumber(item.views);
                 const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
                 
-                // Highlight logic
-                let isHighlighted = false;
-                if (highlightParam) {
-                    const keyword = highlightParam.toLowerCase();
-                    isHighlighted = (item.client && item.client.toLowerCase().includes(keyword)) || (item.category && item.category.toLowerCase().includes(keyword));
-                }
-                const rowClass = isHighlighted ? 'bg-brand-accent/5 dark:bg-brand-accent/10' : 'group hover:bg-gray-50 dark:hover:bg-white/5';
+                // 移除行的高亮樣式
+                const rowClass = 'group hover:bg-gray-50 dark:hover:bg-white/5';
 
                 html += `
                     <tr class="${rowClass} transition-colors">
@@ -505,7 +464,6 @@
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-brand-accent transition-colors">${item.title}</span>
-                                    ${isHighlighted ? '<span class="text-[10px] text-brand-accent font-bold mt-1">★ 精選推薦</span>' : ''}
                                 </div>
                             </div>
                         </td>
@@ -538,19 +496,14 @@
         // 互動與初始化
         // ==========================================
         
-        // 顯示歡迎橫幅
         if (highlightParam) {
-            banner.classList.remove('hidden');
-            bannerText.textContent = decodeURIComponent(highlightParam);
-            
-            // 【新增邏輯】
-            // 如果有 highlightParam，自動在下拉選單最上方插入「★ 精選優先」，並預設選中
+            // 自動在下拉選單最上方插入「相關優先」，並預設選中
             const featuredOption = document.createElement('option');
             featuredOption.value = 'featured';
-            featuredOption.text = '★ 精選優先';
+            featuredOption.text = '相關優先'; // 改名為 相關優先
             sortSelect.insertBefore(featuredOption, sortSelect.firstChild);
             sortSelect.value = 'featured';
-            currentSort = 'featured'; // 設定預設排序邏輯
+            currentSort = 'featured';
         }
 
         // UI Helpers
