@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROCK Studio｜短影音作品集</title>
+    <title>Short Video Portfolio | 作品集</title>
     
     <!-- 字型：Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -169,16 +169,20 @@
         // ==========================================
         // 1. 資料設定
         // ==========================================
+        // 說明：
+        // views: 可以填入數字 (12000)，會自動格式化 (12k)
+        // views: 可以填入字串 "-"，會顯示 "-"
+        // views: 可以填入空白 ""，會直接隱藏眼睛圖示
         const portfolioData = [
             {
                 id: 1,
-                title: "小允兒 x 京藥妝奈米微晶拉提組",
-                client: "台灣綠金家園",
-                category: "保養品",
-                date: "2025-09-15",
-                role: "後製剪輯",
-                views: -, 
-                link: "https://youtube.com/shorts/VHiq0ll1ZmU?si=az-bTmWPgEQaYXtl",
+                title: "品牌形象概念短片",
+                client: "特斯拉 Tesla",
+                category: "汽車科技",
+                date: "2023-12-15",
+                role: "剪輯 & 調色",
+                views: 1250000, 
+                link: "https://youtube.com/shorts/nY6yX4J-lR8?feature=share",
                 thumbnail: "" 
             },
             {
@@ -199,7 +203,7 @@
                 category: "3C 電子",
                 date: "2024-01-05",
                 role: "特效 & 動畫",
-                views: 5600, 
+                views: "-", // 測試：使用 dash
                 link: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
                 thumbnail: ""
             },
@@ -221,7 +225,7 @@
                 category: "餐飲食品",
                 date: "2023-09-01",
                 role: "拍攝 & 剪輯",
-                views: 210000, 
+                views: "", // 測試：空白，將會隱藏
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
@@ -242,7 +246,7 @@
         const DEMO_FALLBACK = "https://placehold.co/800x600/f1f5f9/94a3b8?text=Project";
 
         let currentView = 'grid'; 
-        let currentSort = 'date'; // 默認改回日期優先
+        let currentSort = 'date';
         let items = [...portfolioData];
 
         const container = document.getElementById('portfolio-container');
@@ -253,16 +257,22 @@
         const htmlElement = document.documentElement;
 
         // ==========================================
-        // 數字格式化 helper
+        // 數字格式化 helper (增強版：處理文字輸入)
         // ==========================================
-        function formatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+        function formatNumber(input) {
+            // 如果輸入不是數字 (例如 "-" 或 "N/A")，直接回傳原字串
+            if (typeof input !== 'number') {
+                return input;
             }
-            if (num >= 1000) {
-                return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            
+            // 數字格式化邏輯
+            if (input >= 1000000) {
+                return (input / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
             }
-            return num.toString();
+            if (input >= 1000) {
+                return (input / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            }
+            return input.toString();
         }
 
         // ==========================================
@@ -292,7 +302,11 @@
         function sortItems() {
             items.sort((a, b) => {
                 switch (currentSort) {
-                    case 'views': return b.views - a.views; 
+                    case 'views': 
+                        // 處理排序：如果有 "-" 或空白，視為 -1 (排在最後)
+                        let vA = (typeof a.views === 'number') ? a.views : -1;
+                        let vB = (typeof b.views === 'number') ? b.views : -1;
+                        return vB - vA;
                     case 'date': return new Date(b.date) - new Date(a.date);
                     case 'client': return a.client.localeCompare(b.client, 'zh-Hant');
                     case 'category': return a.category.localeCompare(b.category, 'zh-Hant');
@@ -334,6 +348,9 @@
 
                 const thumbnailSrc = resolveThumbnail(item);
                 const viewsFormatted = formatNumber(item.views);
+                
+                // 檢查是否顯示 views (不是空白字串且不是 undefined)
+                const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
 
                 card.innerHTML = `
                     <a href="${item.link}" target="_blank" class="relative w-full aspect-video overflow-hidden bg-gray-200 dark:bg-gray-800">
@@ -359,12 +376,15 @@
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
                             
+                            <!-- 流量與日期顯示區域 -->
                             <div class="flex items-center gap-1.5 text-slate-400 dark:text-gray-500 text-xs font-mono">
+                                ${showViews ? `
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                     ${viewsFormatted}
                                 </span>
                                 <span class="opacity-30">|</span>
+                                ` : ''}
                                 <span>${item.date}</span>
                             </div>
                         </div>
@@ -412,6 +432,7 @@
             items.forEach((item) => {
                 const thumbnailSrc = resolveThumbnail(item);
                 const viewsFormatted = formatNumber(item.views);
+                const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
                 
                 html += `
                     <tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
@@ -425,9 +446,11 @@
                         </td>
                         <td class="py-4 px-6 text-sm text-slate-600 dark:text-gray-400">${item.client}</td>
                         <td class="py-4 px-6">
+                            ${showViews ? `
                             <span class="inline-flex items-center gap-1 text-sm font-mono text-slate-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
                                 <i data-lucide="eye" class="w-3 h-3 text-slate-400"></i> ${viewsFormatted}
                             </span>
+                            ` : `<span class="text-xs text-slate-300 dark:text-gray-700">-</span>`}
                         </td>
                         <td class="py-4 px-6">
                             <span class="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs text-slate-600 dark:text-gray-400">${item.role}</span>
