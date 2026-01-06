@@ -81,20 +81,19 @@
     <!-- 頂部導航列 -->
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- 調整導航列高度到 h-24 (96px) 以容納更大的 Logo -->
-            <div class="flex justify-between items-center h-20">
+            <!-- 導航列高度設為 96px (h-24)，給 65px 的 Logo 足夠呼吸空間 -->
+            <div class="flex justify-between items-center h-24">
                 <!-- LOGO 區域 -->
                 <div class="flex items-center">
                     <!-- 
-                         Logo 容器調整：
-                         1. 高度設為 h-20 (80px)，比之前大了約 1.5 倍。
-                         2. 寬度設為 w-auto，這樣如果您的 Logo 包含文字且比較長，不會被擠壓。
+                         Logo 容器設定：
+                         h-[65px]: 指定高度 65px
+                         w-auto: 寬度自動，保持比例
                     -->
-                    <div class="relative h-15 w-auto flex items-center justify-start">
+                    <div class="relative h-[65px] w-auto flex items-center justify-start">
                         <!-- 
                             【圖片更換說明】
                             將您的 Logo 命名為 "logo.png" 放在同一資料夾即可。
-                            object-contain 確保圖片完整顯示不變形。
                         -->
                         <img 
                             src="logo.png" 
@@ -104,7 +103,7 @@
                         >
                         
                         <!-- 預設文字 Logo (當找不到圖片時顯示) -->
-                        <div id="default-logo" class="h-14 w-14 bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">
+                        <div id="default-logo" class="h-[65px] w-[65px] bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">
                             P
                         </div>
                         
@@ -117,7 +116,6 @@
                             };
                         </script>
                     </div>
-                    <!-- 文字已移除 -->
                 </div>
 
                 <!-- Dark Mode Toggle -->
