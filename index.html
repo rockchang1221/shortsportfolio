@@ -28,7 +28,7 @@
                     colors: {
                         brand: {
                             light: '#0F172A', 
-                            accent: '#2563EB', // 加亮一點的藍色，適合按鈕
+                            accent: '#2563EB',
                             dark: '#F8FAFC',  
                         }
                     },
@@ -65,7 +65,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* 關鍵動畫定義 (防止被 JIT 移除) */
+        /* 關鍵動畫定義 */
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -116,15 +116,16 @@
         <div class="sticky top-20 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
                 
-                <!-- 排序選單 (優化手機顯示) -->
+                <!-- 排序選單 -->
                 <div class="flex items-center gap-3 w-full sm:w-auto px-2">
                     <div class="flex items-center gap-2 text-slate-500 dark:text-gray-400 whitespace-nowrap">
                         <i data-lucide="arrow-up-down" class="w-4 h-4"></i>
                         <span class="text-sm font-medium">排序依據：</span>
                     </div>
                     <div class="relative flex-grow sm:flex-grow-0">
-                        <select id="sort-select" class="w-full sm:w-48 bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none">
+                        <select id="sort-select" class="w-full sm:w-56 bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none">
                             <option value="date">日期 (最新優先)</option>
+                            <option value="views">流量 (熱門程度)</option>
                             <option value="client">客戶名稱</option>
                             <option value="category">專案類別</option>
                         </select>
@@ -171,23 +172,25 @@
         const portfolioData = [
             {
                 id: 1,
-                title: "小允兒 x 京藥妝奈米微晶拉提組",
-                client: "GREENEOLD台灣綠金家園",
-                category: "保養品",
-                date: "2025-09-15",
-                role: "純剪輯",
-                link: "https://youtube.com/shorts/VHiq0ll1ZmU",
+                title: "品牌形象概念短片",
+                client: "特斯拉 Tesla",
+                category: "汽車科技",
+                date: "2023-12-15",
+                role: "剪輯 & 調色",
+                views: 1250000, 
+                link: "https://youtube.com/shorts/nY6yX4J-lR8?feature=share",
                 thumbnail: "" 
             },
             {
                 id: 2,
-                title: "青島佩 x momochan金賞葡聚醣",
-                client: "GREENEOLD台灣綠金家園",
-                category: "保健食品",
-                date: "2025-09-18",
-                role: "純剪輯",
-                link: "https://youtube.com/shorts/nY6yX4J-lR8?feature=share",
-                thumbnail: "" 
+                title: "春季穿搭 Lookbook",
+                client: "UNIQLO",
+                category: "時尚服飾",
+                date: "2023-11-20",
+                role: "全案製作",
+                views: 38000, 
+                link: "https://www.instagram.com/",
+                thumbnail: ""
             },
             {
                 id: 3,
@@ -196,6 +199,7 @@
                 category: "3C 電子",
                 date: "2024-01-05",
                 role: "特效 & 動畫",
+                views: 5600, 
                 link: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
                 thumbnail: ""
             },
@@ -206,6 +210,7 @@
                 category: "戶外生活",
                 date: "2023-10-10",
                 role: "剪輯",
+                views: 890000, 
                 link: "https://www.youtube.com/watch?v=dummy",
                 thumbnail: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
@@ -216,6 +221,7 @@
                 category: "餐飲食品",
                 date: "2023-09-01",
                 role: "拍攝 & 剪輯",
+                views: 210000, 
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
@@ -226,6 +232,7 @@
                 category: "房產",
                 date: "2024-01-20",
                 role: "後製特效",
+                views: 45000, 
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1600596542815-22b5d010e51e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             }
@@ -235,7 +242,7 @@
         const DEMO_FALLBACK = "https://placehold.co/800x600/f1f5f9/94a3b8?text=Project";
 
         let currentView = 'grid'; 
-        let currentSort = 'date';
+        let currentSort = 'date'; // 默認改回日期優先
         let items = [...portfolioData];
 
         const container = document.getElementById('portfolio-container');
@@ -244,6 +251,19 @@
         const sortSelect = document.getElementById('sort-select');
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
+
+        // ==========================================
+        // 數字格式化 helper
+        // ==========================================
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            }
+            return num.toString();
+        }
 
         // ==========================================
         // 解析縮圖 & 錯誤處理
@@ -272,6 +292,7 @@
         function sortItems() {
             items.sort((a, b) => {
                 switch (currentSort) {
+                    case 'views': return b.views - a.views; 
                     case 'date': return new Date(b.date) - new Date(a.date);
                     case 'client': return a.client.localeCompare(b.client, 'zh-Hant');
                     case 'category': return a.category.localeCompare(b.category, 'zh-Hant');
@@ -289,7 +310,6 @@
             container.style.opacity = '0';
             
             setTimeout(() => {
-                // 強制檢查：如果是手機版，無論如何都渲染 Grid
                 if (window.innerWidth < 768) {
                     renderGridView();
                 } else {
@@ -303,22 +323,19 @@
         }
 
         function renderGridView() {
-            // Gap 調整為 gap-8 md:gap-10，讓卡片分離更明顯
-            // 手機版單欄 (grid-cols-1)
             const gridWrapper = document.createElement('div');
             gridWrapper.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 pb-10';
 
             items.forEach((item, index) => {
                 const card = document.createElement('div');
-                // 為卡片加上明顯的背景色與邊框，解決「黏在一起」的問題
                 card.className = 'group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300';
                 card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
                 card.style.opacity = '0';
 
                 const thumbnailSrc = resolveThumbnail(item);
+                const viewsFormatted = formatNumber(item.views);
 
                 card.innerHTML = `
-                    <!-- 上方：圖片區 (點擊也可觀看) -->
                     <a href="${item.link}" target="_blank" class="relative w-full aspect-video overflow-hidden bg-gray-200 dark:bg-gray-800">
                         <img 
                             src="${thumbnailSrc}" 
@@ -326,13 +343,11 @@
                             onerror="handleImageError(this)"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         >
-                        <!-- 播放按鈕遮罩 -->
                         <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-center justify-center">
                             <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-90 opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300 text-brand-accent">
                                 <i data-lucide="play" class="w-5 h-5 fill-current ml-1"></i>
                             </div>
                         </div>
-                        <!-- 左上角類別標籤 -->
                         <div class="absolute top-3 left-3">
                              <span class="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] font-bold text-white tracking-wider uppercase border border-white/10">
                                 ${item.category}
@@ -340,11 +355,18 @@
                         </div>
                     </a>
 
-                    <!-- 下方：資訊與按鈕區 -->
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
-                            <span class="text-xs text-slate-400 font-mono">${item.date}</span>
+                            
+                            <div class="flex items-center gap-1.5 text-slate-400 dark:text-gray-500 text-xs font-mono">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                    ${viewsFormatted}
+                                </span>
+                                <span class="opacity-30">|</span>
+                                <span>${item.date}</span>
+                            </div>
                         </div>
                         
                         <h3 class="text-lg font-bold text-slate-900 dark:text-gray-100 leading-snug mb-3 line-clamp-2">
@@ -356,7 +378,6 @@
                                 ${item.role}
                             </span>
                             
-                            <!-- 明確的觀看按鈕 -->
                             <a href="${item.link}" target="_blank" class="flex items-center gap-1.5 px-4 py-2 bg-brand-accent hover:bg-blue-700 text-white text-xs font-bold rounded-full transition-colors shadow-md hover:shadow-lg transform active:scale-95">
                                 點擊觀看
                                 <i data-lucide="external-link" class="w-3 h-3"></i>
@@ -380,6 +401,7 @@
                             <tr>
                                 <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">專案</th>
                                 <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">客戶</th>
+                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">流量</th>
                                 <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">負責內容</th>
                                 <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">操作</th>
                             </tr>
@@ -389,6 +411,8 @@
 
             items.forEach((item) => {
                 const thumbnailSrc = resolveThumbnail(item);
+                const viewsFormatted = formatNumber(item.views);
+                
                 html += `
                     <tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                         <td class="py-4 px-6">
@@ -400,6 +424,11 @@
                             </div>
                         </td>
                         <td class="py-4 px-6 text-sm text-slate-600 dark:text-gray-400">${item.client}</td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center gap-1 text-sm font-mono text-slate-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                                <i data-lucide="eye" class="w-3 h-3 text-slate-400"></i> ${viewsFormatted}
+                            </span>
+                        </td>
                         <td class="py-4 px-6">
                             <span class="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs text-slate-600 dark:text-gray-400">${item.role}</span>
                         </td>
@@ -421,7 +450,6 @@
         // 事件監聽與初始化
         // ==========================================
         
-        // 切換按鈕 UI 更新
         function updateViewButtons(mode) {
             const activeClass = ['bg-white', 'dark:bg-neutral-700', 'text-slate-900', 'dark:text-white', 'shadow-sm'];
             const inactiveClass = ['text-slate-500', 'dark:text-gray-400', 'hover:text-slate-900', 'dark:hover:text-white'];
@@ -462,17 +490,14 @@
             setTimeout(() => lucide.createIcons(), 50);
         });
 
-        // 視窗變更監聽
         window.addEventListener('resize', () => {
             if (window.innerWidth < 768 && currentView === 'table') {
-                currentView = 'grid'; // 強制切回 Grid
+                currentView = 'grid'; 
                 render();
             }
         });
 
-        // 初始狀態檢查
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            // htmlElement.classList.add('dark'); // 依需求預設淺色
             htmlElement.classList.remove('dark');
         } else {
             htmlElement.classList.remove('dark');
