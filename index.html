@@ -82,10 +82,36 @@
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- LOGO -->
+                <!-- LOGO 區域 (支援自訂圖片) -->
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-brand-light dark:bg-white rounded-md flex items-center justify-center text-white dark:text-black font-bold text-sm shadow-md">
-                        P
+                    <div class="relative w-8 h-8 flex items-center justify-center">
+                        <!-- 
+                            【如何更換 Logo】
+                            1. 請將您的 Logo 圖片命名為 "logo.png" (或 jpg/svg)
+                            2. 將圖片放入與 index.html 同一個資料夾
+                            3. 下方的 img 標籤會自動讀取，如果讀不到會顯示預設的 'P' 字樣
+                        -->
+                        <img 
+                            src="logo.png" 
+                            alt="Logo" 
+                            class="w-full h-full object-contain" 
+                            onerror="this.style.display='none'; document.getElementById('default-logo').style.display='flex';"
+                        >
+                        
+                        <!-- 預設文字 Logo (當找不到圖片時顯示) -->
+                        <div id="default-logo" class="absolute inset-0 w-8 h-8 bg-brand-light dark:bg-white rounded-md hidden items-center justify-center text-white dark:text-black font-bold text-sm shadow-md" style="display: none;">
+                            P
+                        </div>
+                        
+                        <!-- 初始化腳本：檢查圖片載入狀態 (這段是為了確保初始狀態正確) -->
+                        <script>
+                            // 簡單檢測，如果圖片載入失敗會由上面的 onerror 處理，這裡只是為了防閃爍
+                            const img = document.querySelector('nav img');
+                            img.onerror = function() {
+                                this.style.display = 'none';
+                                document.getElementById('default-logo').style.display = 'flex';
+                            };
+                        </script>
                     </div>
                     <span class="font-bold text-lg tracking-wider uppercase text-slate-900 dark:text-white">Portfolio</span>
                 </div>
@@ -99,15 +125,13 @@
         </div>
     </nav>
 
-    <!-- 已移除歡迎橫幅，保持低調 -->
-
     <!-- 主要內容區 -->
     <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         
         <!-- 標頭簡介 -->
         <header class="mb-10 text-center md:text-left animate-fade-in-up">
-            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">
-                短影音精選作品
+            <h1 class="text-2xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
+                精選短影音作品
             </h1>
         </header>
 
@@ -258,7 +282,6 @@
         
         // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
-        // 支援參數名: 'h', 'highlight', 'q', 'tag'
         const highlightParam = urlParams.get('h') || urlParams.get('highlight') || urlParams.get('q') || urlParams.get('tag');
 
         let items = [...portfolioData];
@@ -305,24 +328,26 @@
         }
 
         // ==========================================
-        // 排序邏輯 (隱形置頂)
+        // 排序邏輯 (真正隱形版)
         // ==========================================
         function sortItems() {
             items.sort((a, b) => {
-                // 1. 優先處理置頂 (Highlight) - 這是秘密進行的
+                // 1. 隱形置頂邏輯：不改選單，直接在後台偷排
                 if (highlightParam) {
                     const keyword = highlightParam.toLowerCase();
                     const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
                     const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
 
+                    // 如果 a 中標 b 沒中，a 排前面
                     if (aMatch && !bMatch) return -1;
+                    // 如果 b 中標 a 沒中，b 排前面
                     if (!aMatch && bMatch) return 1;
-                    // 如果都符合或都不符合，繼續往下比較
+                    // 如果都中或都沒中，就讓下面的標準排序決定他們的順序
                 }
 
                 // 2. 標準排序
                 switch (currentSort) {
-                    case 'featured': // 相關優先 (其實內部邏輯跟日期一樣，只是有加上面的置頂)
+                    case 'featured': // 相關優先
                     case 'date': return new Date(b.date) - new Date(a.date);
                     case 'views': 
                         let vA = (typeof a.views === 'number') ? a.views : -1;
@@ -361,8 +386,7 @@
 
             items.forEach((item, index) => {
                 const card = document.createElement('div');
-                // 移除所有關於 isHighlighted 的視覺標記，保持低調
-                
+                // 完全不加任何 highlightClass，保持完全一致
                 card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 shadow-card hover:shadow-card-hover`;
                 
                 card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
@@ -452,7 +476,7 @@
                 const viewsFormatted = formatNumber(item.views);
                 const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
                 
-                // 移除行的高亮樣式
+                // 完全一致的樣式，沒有背景色區別
                 const rowClass = 'group hover:bg-gray-50 dark:hover:bg-white/5';
 
                 html += `
@@ -500,7 +524,7 @@
             // 自動在下拉選單最上方插入「相關優先」，並預設選中
             const featuredOption = document.createElement('option');
             featuredOption.value = 'featured';
-            featuredOption.text = '相關優先'; // 改名為 相關優先
+            featuredOption.text = '相關優先'; // 相關優先
             sortSelect.insertBefore(featuredOption, sortSelect.firstChild);
             sortSelect.value = 'featured';
             currentSort = 'featured';
