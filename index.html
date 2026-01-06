@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROCK Studio｜短影音作品集</title>
+    <title>Short Video Portfolio | 作品集</title>
     
     <!-- 字型：Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,10 +81,12 @@
     <!-- 頂部導航列 -->
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <!-- 調整導航列高度從 h-16 (64px) 到 h-20 (80px) 以容納更大的 Logo -->
+            <div class="flex justify-between items-center h-20">
                 <!-- LOGO 區域 (支援自訂圖片) -->
-                <div class="flex items-center gap-3">
-                    <div class="relative h-8 flex items-center justify-center">
+                <div class="flex items-center gap-4">
+                    <!-- 調整 Logo 容器大小從 w-8 h-8 (32px) 到 w-14 h-14 (56px) -->
+                    <div class="relative w-14 h-14 flex items-center justify-center">
                         <!-- 
                             【如何更換 Logo】
                             1. 請將您的 Logo 圖片命名為 "logo.png" (或 jpg/svg)
@@ -99,7 +101,8 @@
                         >
                         
                         <!-- 預設文字 Logo (當找不到圖片時顯示) -->
-                        <div id="default-logo" class="absolute inset-0 w-8 h-8 bg-brand-light dark:bg-white rounded-md hidden items-center justify-center text-white dark:text-black font-bold text-sm shadow-md" style="display: none;">
+                        <!-- 調整預設 Logo 大小與文字大小以匹配新尺寸 -->
+                        <div id="default-logo" class="absolute inset-0 w-14 h-14 bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md" style="display: none;">
                             P
                         </div>
                         
@@ -113,7 +116,7 @@
                             };
                         </script>
                     </div>
-                    <span class="font-bold text-lg tracking-wider uppercase text-slate-900 dark:text-white"></span>
+                    <span class="font-bold text-xl tracking-wider uppercase text-slate-900 dark:text-white">Portfolio</span>
                 </div>
 
                 <!-- Dark Mode Toggle -->
@@ -130,13 +133,16 @@
         
         <!-- 標頭簡介 -->
         <header class="mb-10 text-center md:text-left animate-fade-in-up">
-            <h1 class="text-2xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">
                 精選短影音作品
             </h1>
+            <p class="text-slate-500 dark:text-gray-400 text-base max-w-2xl mx-auto md:mx-0 leading-relaxed">
+                專注於視覺節奏與品牌敘事。點擊下方作品即可觀看完整內容。
+            </p>
         </header>
 
         <!-- 控制工具列 -->
-        <div class="sticky top-16 md:top-20 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="sticky top-24 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
                 
                 <!-- 排序與篩選 -->
