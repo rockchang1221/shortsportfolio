@@ -34,6 +34,7 @@
                     },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-down': 'slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     boxShadow: {
                         'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
@@ -74,6 +75,10 @@
             0% { opacity: 0; transform: scale(0.98); }
             100% { opacity: 1; transform: scale(1); }
         }
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 dark:bg-[#0f0f0f] dark:text-gray-200 min-h-screen flex flex-col font-sans antialiased">
@@ -99,6 +104,18 @@
         </div>
     </nav>
 
+    <!-- 客製化歡迎橫幅 (預設隱藏，透過 JS 觸發) -->
+    <div id="highlight-banner" class="hidden w-full bg-brand-accent/10 border-b border-brand-accent/20 animate-slide-down">
+        <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center gap-3 text-sm text-brand-accent">
+            <i data-lucide="sparkles" class="w-4 h-4 fill-current"></i>
+            <div>
+                <span class="font-bold">專屬精選：</span>
+                <span id="highlight-text" class="font-medium"></span>
+                <span class="opacity-70 ml-1">相關作品已為您優先排序</span>
+            </div>
+        </div>
+    </div>
+
     <!-- 主要內容區 -->
     <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         
@@ -113,24 +130,28 @@
         </header>
 
         <!-- 控制工具列 -->
-        <div class="sticky top-20 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="sticky top-16 md:top-20 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
                 
-                <!-- 排序選單 -->
-                <div class="flex items-center gap-3 w-full sm:w-auto px-2">
-                    <div class="flex items-center gap-2 text-slate-500 dark:text-gray-400 whitespace-nowrap">
-                        <i data-lucide="arrow-up-down" class="w-4 h-4"></i>
-                        <span class="text-sm font-medium">排序依據：</span>
+                <!-- 排序與篩選 -->
+                <div class="flex items-center gap-3 w-full sm:w-auto px-2 justify-between sm:justify-start">
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-gray-400 whitespace-nowrap">
+                            <i data-lucide="arrow-up-down" class="w-4 h-4"></i>
+                            <span class="text-sm font-medium hidden sm:inline">排序：</span>
+                        </div>
+                        <div class="relative">
+                            <select id="sort-select" class="w-40 sm:w-48 bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none">
+                                <option value="date">日期 (最新優先)</option>
+                                <option value="views">流量 (熱門程度)</option>
+                                <option value="client">客戶名稱</option>
+                                <option value="category">專案類別</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                        </div>
                     </div>
-                    <div class="relative flex-grow sm:flex-grow-0">
-                        <select id="sort-select" class="w-full sm:w-56 bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none">
-                            <option value="date">日期 (最新優先)</option>
-                            <option value="views">流量 (熱門程度)</option>
-                            <option value="client">客戶名稱</option>
-                            <option value="category">專案類別</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
-                    </div>
+
+                    <!-- 產生連結按鈕已移除 -->
                 </div>
 
                 <!-- 檢視模式切換 (手機隱藏) -->
@@ -169,10 +190,6 @@
         // ==========================================
         // 1. 資料設定
         // ==========================================
-        // 說明：
-        // views: 可以填入數字 (12000)，會自動格式化 (12k)
-        // views: 可以填入字串 "-"，會顯示 "-"
-        // views: 可以填入空白 ""，會直接隱藏眼睛圖示
         const portfolioData = [
             {
                 id: 1,
@@ -203,7 +220,7 @@
                 category: "3C 電子",
                 date: "2024-01-05",
                 role: "特效 & 動畫",
-                views: "-", // 測試：使用 dash
+                views: "-",
                 link: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
                 thumbnail: ""
             },
@@ -225,7 +242,7 @@
                 category: "餐飲食品",
                 date: "2023-09-01",
                 role: "拍攝 & 剪輯",
-                views: "", // 測試：空白，將會隱藏
+                views: "", 
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
@@ -239,6 +256,17 @@
                 views: 45000, 
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1600596542815-22b5d010e51e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+             {
+                id: 7,
+                title: "競選廣告：改變的力量",
+                client: "王小明競選總部",
+                category: "政治",
+                date: "2024-02-15",
+                role: "全案製作",
+                views: 250000, 
+                link: "#",
+                thumbnail: "https://images.unsplash.com/photo-1541872703-74c5963631df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             }
         ];
 
@@ -247,6 +275,12 @@
 
         let currentView = 'grid'; 
         let currentSort = 'date';
+        
+        // 解析 URL 參數 (看看有沒有 ?h=xxx)
+        const urlParams = new URLSearchParams(window.location.search);
+        // 支援參數名: 'h', 'highlight', 'q', 'tag'
+        const highlightParam = urlParams.get('h') || urlParams.get('highlight') || urlParams.get('q') || urlParams.get('tag');
+
         let items = [...portfolioData];
 
         const container = document.getElementById('portfolio-container');
@@ -254,29 +288,23 @@
         const btnTable = document.getElementById('view-table');
         const sortSelect = document.getElementById('sort-select');
         const themeToggle = document.getElementById('theme-toggle');
+        // const shareBtn = document.getElementById('share-btn'); // Removed
+        const banner = document.getElementById('highlight-banner');
+        const bannerText = document.getElementById('highlight-text');
         const htmlElement = document.documentElement;
 
         // ==========================================
-        // 數字格式化 helper (增強版：處理文字輸入)
+        // 數字格式化 helper
         // ==========================================
         function formatNumber(input) {
-            // 如果輸入不是數字 (例如 "-" 或 "N/A")，直接回傳原字串
-            if (typeof input !== 'number') {
-                return input;
-            }
-            
-            // 數字格式化邏輯
-            if (input >= 1000000) {
-                return (input / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-            }
-            if (input >= 1000) {
-                return (input / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-            }
+            if (typeof input !== 'number') return input;
+            if (input >= 1000000) return (input / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (input >= 1000) return (input / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
             return input.toString();
         }
 
         // ==========================================
-        // 解析縮圖 & 錯誤處理
+        // 解析縮圖
         // ==========================================
         function resolveThumbnail(item) {
             if (item.thumbnail && item.thumbnail.trim() !== "") return item.thumbnail;
@@ -299,15 +327,33 @@
             }
         }
 
+        // ==========================================
+        // 排序邏輯 (核心：包含置頂功能)
+        // ==========================================
         function sortItems() {
             items.sort((a, b) => {
+                // 1. 優先處理置頂 (Highlight)
+                if (highlightParam) {
+                    const keyword = highlightParam.toLowerCase();
+                    // 檢查是否符合關鍵字 (檢查 客戶名稱 或 類別)
+                    const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
+                    const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
+
+                    // 如果 a 符合但 b 不符合，a 排前面 (-1)
+                    if (aMatch && !bMatch) return -1;
+                    // 如果 b 符合但 a 不符合，b 排前面 (1)
+                    if (!aMatch && bMatch) return 1;
+                    // 如果都符合或都不符合，進入下方標準排序
+                }
+
+                // 2. 標準排序
                 switch (currentSort) {
+                    case 'featured': // 精選優先 (預設行為與日期相同，因為上方 highlightParam 已處理置頂)
+                    case 'date': return new Date(b.date) - new Date(a.date);
                     case 'views': 
-                        // 處理排序：如果有 "-" 或空白，視為 -1 (排在最後)
                         let vA = (typeof a.views === 'number') ? a.views : -1;
                         let vB = (typeof b.views === 'number') ? b.views : -1;
                         return vB - vA;
-                    case 'date': return new Date(b.date) - new Date(a.date);
                     case 'client': return a.client.localeCompare(b.client, 'zh-Hant');
                     case 'category': return a.category.localeCompare(b.category, 'zh-Hant');
                     default: return 0;
@@ -330,7 +376,6 @@
                     if (currentView === 'grid') renderGridView();
                     else renderTableView();
                 }
-                
                 lucide.createIcons();
                 container.style.opacity = '1';
             }, 100);
@@ -341,15 +386,25 @@
             gridWrapper.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 pb-10';
 
             items.forEach((item, index) => {
+                // 檢查此項目是否為被 Highlight 的項目
+                let isHighlighted = false;
+                if (highlightParam) {
+                    const keyword = highlightParam.toLowerCase();
+                    isHighlighted = (item.client && item.client.toLowerCase().includes(keyword)) || (item.category && item.category.toLowerCase().includes(keyword));
+                }
+
                 const card = document.createElement('div');
-                card.className = 'group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300';
+                // 如果是 Highlight 項目，加一個特殊的金色邊框或陰影
+                const highlightClass = isHighlighted ? 'ring-2 ring-brand-accent shadow-xl scale-[1.02]' : 'shadow-card hover:shadow-card-hover';
+                
+                card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 ${highlightClass}`;
+                
+                // 動畫延遲
                 card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
                 card.style.opacity = '0';
 
                 const thumbnailSrc = resolveThumbnail(item);
                 const viewsFormatted = formatNumber(item.views);
-                
-                // 檢查是否顯示 views (不是空白字串且不是 undefined)
                 const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
 
                 card.innerHTML = `
@@ -365,18 +420,17 @@
                                 <i data-lucide="play" class="w-5 h-5 fill-current ml-1"></i>
                             </div>
                         </div>
-                        <div class="absolute top-3 left-3">
+                        <div class="absolute top-3 left-3 flex gap-2">
                              <span class="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] font-bold text-white tracking-wider uppercase border border-white/10">
                                 ${item.category}
                             </span>
+                             ${isHighlighted ? `<span class="px-2.5 py-1 bg-brand-accent text-white rounded-md text-[10px] font-bold shadow-lg flex items-center gap-1"><i data-lucide="star" class="w-3 h-3 fill-current"></i>精選</span>` : ''}
                         </div>
                     </a>
 
                     <div class="p-5 flex flex-col flex-grow">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
-                            
-                            <!-- 流量與日期顯示區域 -->
                             <div class="flex items-center gap-1.5 text-slate-400 dark:text-gray-500 text-xs font-mono">
                                 ${showViews ? `
                                 <span class="flex items-center gap-1">
@@ -413,8 +467,8 @@
         function renderTableView() {
             const tableWrapper = document.createElement('div');
             tableWrapper.className = 'w-full animate-fade-in-up bg-white dark:bg-[#151515] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden';
-
-            let html = `
+            // ... (Table view code same as before but uses sorted items) ...
+             let html = `
                 <div class="w-full overflow-x-auto no-scrollbar">
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-gray-50 dark:bg-black/20">
@@ -434,14 +488,25 @@
                 const viewsFormatted = formatNumber(item.views);
                 const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
                 
+                // Highlight logic
+                let isHighlighted = false;
+                if (highlightParam) {
+                    const keyword = highlightParam.toLowerCase();
+                    isHighlighted = (item.client && item.client.toLowerCase().includes(keyword)) || (item.category && item.category.toLowerCase().includes(keyword));
+                }
+                const rowClass = isHighlighted ? 'bg-brand-accent/5 dark:bg-brand-accent/10' : 'group hover:bg-gray-50 dark:hover:bg-white/5';
+
                 html += `
-                    <tr class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                    <tr class="${rowClass} transition-colors">
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-4">
                                 <div class="w-20 aspect-video rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 relative">
                                     <img class="w-full h-full object-cover" src="${thumbnailSrc}" alt="" onerror="handleImageError(this)">
                                 </div>
-                                <span class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-brand-accent transition-colors">${item.title}</span>
+                                <div class="flex flex-col">
+                                    <span class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-brand-accent transition-colors">${item.title}</span>
+                                    ${isHighlighted ? '<span class="text-[10px] text-brand-accent font-bold mt-1">★ 精選推薦</span>' : ''}
+                                </div>
                             </div>
                         </td>
                         <td class="py-4 px-6 text-sm text-slate-600 dark:text-gray-400">${item.client}</td>
@@ -470,9 +535,25 @@
         }
 
         // ==========================================
-        // 事件監聽與初始化
+        // 互動與初始化
         // ==========================================
         
+        // 顯示歡迎橫幅
+        if (highlightParam) {
+            banner.classList.remove('hidden');
+            bannerText.textContent = decodeURIComponent(highlightParam);
+            
+            // 【新增邏輯】
+            // 如果有 highlightParam，自動在下拉選單最上方插入「★ 精選優先」，並預設選中
+            const featuredOption = document.createElement('option');
+            featuredOption.value = 'featured';
+            featuredOption.text = '★ 精選優先';
+            sortSelect.insertBefore(featuredOption, sortSelect.firstChild);
+            sortSelect.value = 'featured';
+            currentSort = 'featured'; // 設定預設排序邏輯
+        }
+
+        // UI Helpers
         function updateViewButtons(mode) {
             const activeClass = ['bg-white', 'dark:bg-neutral-700', 'text-slate-900', 'dark:text-white', 'shadow-sm'];
             const inactiveClass = ['text-slate-500', 'dark:text-gray-400', 'hover:text-slate-900', 'dark:hover:text-white'];
@@ -490,34 +571,16 @@
             }
         }
 
-        btnGrid.addEventListener('click', () => {
-            currentView = 'grid';
-            updateViewButtons('grid');
-            render();
-        });
-
-        btnTable.addEventListener('click', () => {
-            currentView = 'table';
-            updateViewButtons('table');
-            render();
-        });
-
-        sortSelect.addEventListener('change', (e) => {
-            currentSort = e.target.value;
-            sortItems();
-        });
-
+        btnGrid.addEventListener('click', () => { currentView = 'grid'; updateViewButtons('grid'); render(); });
+        btnTable.addEventListener('click', () => { currentView = 'table'; updateViewButtons('table'); render(); });
+        sortSelect.addEventListener('change', (e) => { currentSort = e.target.value; sortItems(); });
         themeToggle.addEventListener('click', () => {
             htmlElement.classList.toggle('dark');
             localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
             setTimeout(() => lucide.createIcons(), 50);
         });
-
         window.addEventListener('resize', () => {
-            if (window.innerWidth < 768 && currentView === 'table') {
-                currentView = 'grid'; 
-                render();
-            }
+            if (window.innerWidth < 768 && currentView === 'table') { currentView = 'grid'; render(); }
         });
 
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -527,7 +590,7 @@
         }
 
         updateViewButtons('grid');
-        sortItems();
+        sortItems(); // 這裡會觸發排序與渲染
 
     </script>
 </body>
