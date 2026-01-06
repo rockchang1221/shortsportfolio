@@ -16,6 +16,22 @@
     <!-- 圖標庫 (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- 錯誤偵測腳本 (新增) -->
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            const errorBox = document.getElementById('error-overlay');
+            const errorText = document.getElementById('error-text');
+            if (errorBox && errorText) {
+                errorBox.style.display = 'flex';
+                let msg = message;
+                if (message.includes("SyntaxError") || message.includes("Unexpected token")) {
+                    msg = "⚠️ 資料格式錯誤！\n請檢查 portfolioData 區域：\n1. 是否每件作品的 `}` 後面都有加逗號 `,`？\n2. 是否有引號 `\"` 沒關好？";
+                }
+                errorText.innerText = `${msg}\n\n(錯誤位置: Line ${lineno})`;
+            }
+        };
+    </script>
+
     <!-- Tailwind 設定 -->
     <script>
         tailwind.config = {
@@ -78,36 +94,36 @@
 </head>
 <body class="bg-gray-50 text-slate-800 dark:bg-[#0f0f0f] dark:text-gray-200 min-h-screen flex flex-col font-sans antialiased">
 
+    <!-- 錯誤提示遮罩 (預設隱藏) -->
+    <div id="error-overlay" class="fixed inset-0 z-[100] bg-black/80 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white text-red-600 p-6 rounded-xl max-w-lg w-full shadow-2xl border-2 border-red-500">
+            <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                程式碼發生錯誤
+            </h2>
+            <p id="error-text" class="whitespace-pre-line font-mono text-sm bg-red-50 p-3 rounded border border-red-100"></p>
+            <p class="mt-4 text-sm text-gray-500">請檢查 index.html 檔案中的資料格式，修正後重新整理網頁。</p>
+        </div>
+    </div>
+
     <!-- 頂部導航列 -->
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- 導航列高度設為 96px (h-24)，給 65px 的 Logo 足夠呼吸空間 -->
             <div class="flex justify-between items-center h-24">
                 <!-- LOGO 區域 -->
                 <div class="flex items-center">
-                    <!-- 
-                         Logo 容器設定：
-                         h-[65px]: 指定高度 65px
-                         w-auto: 寬度自動，保持比例
-                    -->
                     <div class="relative h-[65px] w-auto flex items-center justify-start">
-                        <!-- 
-                            【圖片更換說明】
-                            將您的 Logo 命名為 "logo.png" 放在同一資料夾即可。
-                        -->
                         <img 
                             src="logo.png" 
                             alt="Logo" 
                             class="h-full w-auto object-contain" 
                             onerror="this.style.display='none'; document.getElementById('default-logo').style.display='flex';"
                         >
-                        
-                        <!-- 預設文字 Logo (當找不到圖片時顯示) -->
                         <div id="default-logo" class="h-[65px] w-[65px] bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">
                             P
                         </div>
-                        
-                        <!-- 初始化腳本 -->
                         <script>
                             const img = document.querySelector('nav img');
                             img.onerror = function() {
@@ -163,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- 檢視模式切換 (手機隱藏) -->
+                <!-- 檢視模式切換 -->
                 <div class="hidden md:flex bg-gray-100 dark:bg-neutral-800 rounded-lg p-1 gap-1">
                     <button id="view-grid" class="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-900 dark:text-white bg-white dark:bg-neutral-700 shadow-sm">
                         <i data-lucide="layout-grid" class="w-4 h-4"></i>
@@ -199,17 +215,10 @@
         // ==========================================
         // 1. 資料設定
         // ==========================================
+        // ★★★ 編輯重點 ★★★
+        // 1. 每一個 { ... } 結束後的逗號 (,) 千萬不能少！
+        // 2. 文字內容記得用雙引號 " " 包起來
         const portfolioData = [
-            {
-                title: "大雅超強的老趙傳統麵食館",
-                client: "立法委員何欣純",
-                category: "政治人物",
-                date: "2025-07-01",
-                role: "後製剪輯",
-                views: 1370000, 
-                link: “https://www.facebook.com/share/r/1K8hLL7ivb/?mibextid=wwXIfr",
-                thumbnail: "" 
-            },
             {
                 title: "品牌形象概念短片",
                 client: "特斯拉 Tesla",
@@ -279,7 +288,7 @@
                 views: 250000, 
                 link: "#",
                 thumbnail: "https://images.unsplash.com/photo-1541872703-74c5963631df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            }
+            } // <--- 如果這是最後一個，這裡可以不加逗號，但加了也不會錯
         ];
 
         const FALLBACK_THUMBNAIL = "縮圖替代.png"; 
