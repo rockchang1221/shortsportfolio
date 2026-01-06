@@ -81,34 +81,35 @@
     <!-- 頂部導航列 -->
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- 調整導航列高度從 h-16 (64px) 到 h-20 (80px) 以容納更大的 Logo -->
-            <div class="flex justify-between items-center h-20">
-                <!-- LOGO 區域 (支援自訂圖片) -->
-                <div class="flex items-center gap-4">
-                    <!-- 調整 Logo 容器大小從 w-8 h-8 (32px) 到 w-14 h-14 (56px) -->
-                    <div class="relative w-14 h-14 flex items-center justify-center">
+            <!-- 調整導航列高度到 h-24 (96px) 以容納更大的 Logo -->
+            <div class="flex justify-between items-center h-24">
+                <!-- LOGO 區域 -->
+                <div class="flex items-center">
+                    <!-- 
+                         Logo 容器調整：
+                         1. 高度設為 h-20 (80px)，比之前大了約 1.5 倍。
+                         2. 寬度設為 w-auto，這樣如果您的 Logo 包含文字且比較長，不會被擠壓。
+                    -->
+                    <div class="relative h-20 w-auto flex items-center justify-start">
                         <!-- 
-                            【如何更換 Logo】
-                            1. 請將您的 Logo 圖片命名為 "logo.png" (或 jpg/svg)
-                            2. 將圖片放入與 index.html 同一個資料夾
-                            3. 下方的 img 標籤會自動讀取，如果讀不到會顯示預設的 'P' 字樣
+                            【圖片更換說明】
+                            將您的 Logo 命名為 "logo.png" 放在同一資料夾即可。
+                            object-contain 確保圖片完整顯示不變形。
                         -->
                         <img 
                             src="logo.png" 
                             alt="Logo" 
-                            class="w-full h-full object-contain" 
+                            class="h-full w-auto object-contain" 
                             onerror="this.style.display='none'; document.getElementById('default-logo').style.display='flex';"
                         >
                         
                         <!-- 預設文字 Logo (當找不到圖片時顯示) -->
-                        <!-- 調整預設 Logo 大小與文字大小以匹配新尺寸 -->
-                        <div id="default-logo" class="absolute inset-0 w-14 h-14 bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md" style="display: none;">
+                        <div id="default-logo" class="h-14 w-14 bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">
                             P
                         </div>
                         
-                        <!-- 初始化腳本：檢查圖片載入狀態 (這段是為了確保初始狀態正確) -->
+                        <!-- 初始化腳本 -->
                         <script>
-                            // 簡單檢測，如果圖片載入失敗會由上面的 onerror 處理，這裡只是為了防閃爍
                             const img = document.querySelector('nav img');
                             img.onerror = function() {
                                 this.style.display = 'none';
@@ -116,7 +117,7 @@
                             };
                         </script>
                     </div>
-                    <span class="font-bold text-xl tracking-wider uppercase text-slate-900 dark:text-white">Portfolio</span>
+                    <!-- 文字已移除 -->
                 </div>
 
                 <!-- Dark Mode Toggle -->
@@ -142,7 +143,7 @@
         </header>
 
         <!-- 控制工具列 -->
-        <div class="sticky top-24 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="sticky top-28 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
                 
                 <!-- 排序與篩選 -->
@@ -202,7 +203,6 @@
         // ==========================================
         const portfolioData = [
             {
-                id: 1,
                 title: "品牌形象概念短片",
                 client: "特斯拉 Tesla",
                 category: "汽車科技",
@@ -213,7 +213,6 @@
                 thumbnail: "" 
             },
             {
-                id: 2,
                 title: "春季穿搭 Lookbook",
                 client: "UNIQLO",
                 category: "時尚服飾",
@@ -224,7 +223,6 @@
                 thumbnail: ""
             },
             {
-                id: 3,
                 title: "新品上市 15s 廣告",
                 client: "Samsung",
                 category: "3C 電子",
@@ -235,7 +233,6 @@
                 thumbnail: ""
             },
             {
-                id: 4,
                 title: "風格露營 VLOG",
                 client: "Snow Peak",
                 category: "戶外生活",
@@ -246,7 +243,6 @@
                 thumbnail: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
-                id: 5,
                 title: "咖啡沖煮教學 Reels",
                 client: "Blue Bottle",
                 category: "餐飲食品",
@@ -257,7 +253,6 @@
                 thumbnail: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
-                id: 6,
                 title: "豪華房地產導覽",
                 client: "蘇富比房地產",
                 category: "房產",
@@ -268,7 +263,6 @@
                 thumbnail: "https://images.unsplash.com/photo-1600596542815-22b5d010e51e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
              {
-                id: 7,
                 title: "競選廣告：改變的力量",
                 client: "王小明競選總部",
                 category: "政治",
@@ -338,17 +332,14 @@
         // ==========================================
         function sortItems() {
             items.sort((a, b) => {
-                // 1. 隱形置頂邏輯：不改選單，直接在後台偷排
+                // 1. 隱形置頂邏輯
                 if (highlightParam) {
                     const keyword = highlightParam.toLowerCase();
                     const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
                     const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
 
-                    // 如果 a 中標 b 沒中，a 排前面
                     if (aMatch && !bMatch) return -1;
-                    // 如果 b 中標 a 沒中，b 排前面
                     if (!aMatch && bMatch) return 1;
-                    // 如果都中或都沒中，就讓下面的標準排序決定他們的順序
                 }
 
                 // 2. 標準排序
@@ -392,7 +383,6 @@
 
             items.forEach((item, index) => {
                 const card = document.createElement('div');
-                // 完全不加任何 highlightClass，保持完全一致
                 card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 shadow-card hover:shadow-card-hover`;
                 
                 card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
@@ -482,7 +472,6 @@
                 const viewsFormatted = formatNumber(item.views);
                 const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
                 
-                // 完全一致的樣式，沒有背景色區別
                 const rowClass = 'group hover:bg-gray-50 dark:hover:bg-white/5';
 
                 html += `
@@ -527,10 +516,9 @@
         // ==========================================
         
         if (highlightParam) {
-            // 自動在下拉選單最上方插入「相關優先」，並預設選中
             const featuredOption = document.createElement('option');
             featuredOption.value = 'featured';
-            featuredOption.text = '相關優先'; // 相關優先
+            featuredOption.text = '相關優先';
             sortSelect.insertBefore(featuredOption, sortSelect.firstChild);
             sortSelect.value = 'featured';
             currentSort = 'featured';
