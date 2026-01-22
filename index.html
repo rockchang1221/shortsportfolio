@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short Video Portfolio | 作品集</title>
+    <title>ROCK Studio｜作品集</title>
     
     <!-- 字型：Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,22 +15,6 @@
     
     <!-- 圖標庫 (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- 錯誤偵測腳本 (新增) -->
-    <script>
-        window.onerror = function(message, source, lineno, colno, error) {
-            const errorBox = document.getElementById('error-overlay');
-            const errorText = document.getElementById('error-text');
-            if (errorBox && errorText) {
-                errorBox.style.display = 'flex';
-                let msg = message;
-                if (message.includes("SyntaxError") || message.includes("Unexpected token")) {
-                    msg = "⚠️ 資料格式錯誤！\n請檢查 portfolioData 區域：\n1. 是否每件作品的 `}` 後面都有加逗號 `,`？\n2. 是否有引號 `\"` 沒關好？";
-                }
-                errorText.innerText = `${msg}\n\n(錯誤位置: Line ${lineno})`;
-            }
-        };
-    </script>
 
     <!-- Tailwind 設定 -->
     <script>
@@ -61,80 +45,44 @@
     </script>
 
     <style>
-        /* 全局平滑過渡 */
-        body, div, nav, button, table, th, td, select, img, a {
-            transition: all 0.3s ease;
-        }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* 毛玻璃導航 */
+        body, div, nav, button, a { transition: all 0.3s ease; }
         .glass-effect {
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         .dark .glass-effect {
-            background: rgba(23, 23, 23, 0.8);
+            background: rgba(20, 20, 20, 0.85);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        /* 關鍵動畫定義 */
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        @keyframes scaleIn {
-            0% { opacity: 0; transform: scale(0.98); }
-            100% { opacity: 1; transform: scale(1); }
+        /* 金色漸層文字效果 */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #D4AF37, #F5E08E, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            font-weight: 800;
         }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 dark:bg-[#0f0f0f] dark:text-gray-200 min-h-screen flex flex-col font-sans antialiased">
 
-    <!-- 錯誤提示遮罩 (預設隱藏) -->
-    <div id="error-overlay" class="fixed inset-0 z-[100] bg-black/80 hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white text-red-600 p-6 rounded-xl max-w-lg w-full shadow-2xl border-2 border-red-500">
-            <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                程式碼發生錯誤
-            </h2>
-            <p id="error-text" class="whitespace-pre-line font-mono text-sm bg-red-50 p-3 rounded border border-red-100"></p>
-            <p class="mt-4 text-sm text-gray-500">請檢查 index.html 檔案中的資料格式，修正後重新整理網頁。</p>
-        </div>
-    </div>
-
     <!-- 頂部導航列 -->
     <nav class="sticky top-0 z-50 w-full glass-effect">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-24">
-                <!-- LOGO 區域 -->
                 <div class="flex items-center">
                     <div class="relative h-[65px] w-auto flex items-center justify-start">
-                        <img 
-                            src="logo.png" 
-                            alt="Logo" 
-                            class="h-full w-auto object-contain" 
-                            onerror="this.style.display='none'; document.getElementById('default-logo').style.display='flex';"
-                        >
-                        <div id="default-logo" class="h-[65px] w-[65px] bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">
-                            P
-                        </div>
-                        <script>
-                            const img = document.querySelector('nav img');
-                            img.onerror = function() {
-                                this.style.display = 'none';
-                                document.getElementById('default-logo').style.display = 'flex';
-                            };
-                        </script>
+                        <img src="logo.png" alt="Logo" class="h-full w-auto object-contain" onerror="this.style.display='none'; document.getElementById('default-logo').style.display='flex';">
+                        <div id="default-logo" class="h-[65px] w-[65px] bg-brand-light dark:bg-white rounded-xl hidden items-center justify-center text-white dark:text-black font-bold text-2xl shadow-md">P</div>
+                        <script>const img = document.querySelector('nav img'); img.onerror = function() { this.style.display = 'none'; document.getElementById('default-logo').style.display = 'flex'; };</script>
                     </div>
                 </div>
-
-                <!-- Dark Mode Toggle -->
                 <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400">
                     <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
                     <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
@@ -144,63 +92,74 @@
     </nav>
 
     <!-- 主要內容區 -->
-    <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         
         <!-- 標頭簡介 -->
-        <header class="mb-10 text-center md:text-left animate-fade-in-up">
-            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">
+        <header class="mb-12 md:mb-16 animate-fade-in-up">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
                 精選短影音作品
             </h1>
+            <p class="text-slate-500 dark:text-gray-400 text-base max-w-2xl leading-relaxed">
+                專注於視覺節奏與品牌敘事。
+            </p>
         </header>
 
-        <!-- 控制工具列 -->
-        <div class="sticky top-28 z-40 mb-10 animate-fade-in-up" style="animation-delay: 0.1s;">
-            <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-3">
-                
-                <!-- 排序與篩選 -->
-                <div class="flex items-center gap-3 w-full sm:w-auto px-2 justify-between sm:justify-start">
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center gap-2 text-slate-500 dark:text-gray-400 whitespace-nowrap">
-                            <i data-lucide="arrow-up-down" class="w-4 h-4"></i>
-                            <span class="text-sm font-medium hidden sm:inline">排序：</span>
-                        </div>
-                        <div class="relative">
-                            <select id="sort-select" class="w-40 sm:w-48 bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none">
-                                <option value="date">日期 (最新優先)</option>
-                                <option value="views">流量 (熱門程度)</option>
-                                <option value="client">客戶名稱</option>
-                                <option value="category">專案類別</option>
-                            </select>
-                            <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
-                        </div>
+        <!-- 第一區：精選置頂 (Featured) -->
+        <section id="featured-section" class="mb-20 animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="flex items-center gap-2 mb-6">
+                <i data-lucide="star" class="w-5 h-5 text-brand-accent fill-current"></i>
+                <h2 class="text-xl font-bold text-slate-800 dark:text-white">精選案例</h2>
+            </div>
+            
+            <div id="featured-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Javascript will render featured cards here -->
+            </div>
+        </section>
+
+        <!-- 第二區：所有列表 (Archive List) -->
+        <section id="list-section" class="animate-fade-in-up" style="animation-delay: 0.2s;">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="list-video" class="w-5 h-5 text-slate-500 dark:text-gray-400"></i>
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-white">所有作品列表</h2>
+                </div>
+
+                <!-- 排序選單 -->
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-slate-500 dark:text-gray-400">排序：</span>
+                    <div class="relative">
+                        <select id="sort-select" class="bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none shadow-sm">
+                            <option value="views">流量 (熱門優先)</option>
+                            <option value="date">日期 (最新優先)</option>
+                            <option value="client">客戶名稱</option>
+                            <option value="category">專案類別</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                     </div>
                 </div>
-
-                <!-- 檢視模式切換 -->
-                <div class="hidden md:flex bg-gray-100 dark:bg-neutral-800 rounded-lg p-1 gap-1">
-                    <button id="view-grid" class="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-900 dark:text-white bg-white dark:bg-neutral-700 shadow-sm">
-                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
-                        區塊
-                    </button>
-                    <button id="view-table" class="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white">
-                        <i data-lucide="list" class="w-4 h-4"></i>
-                        列表
-                    </button>
-                </div>
             </div>
-        </div>
 
-        <!-- 內容容器 -->
-        <div id="portfolio-container" class="min-h-[400px] animate-fade-in-up" style="animation-delay: 0.2s;">
-            <!-- Render Content Here -->
-        </div>
+            <!-- 列表容器 (標題列) -->
+            <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-800">
+                <div class="col-span-5">專案名稱 / 連結</div>
+                <div class="col-span-2">客戶</div>
+                <div class="col-span-2">流量</div>
+                <div class="col-span-2">負責內容</div>
+                <div class="col-span-1 text-right">日期</div>
+            </div>
+
+            <!-- 列表內容 (已調整間距) -->
+            <div id="list-container" class="space-y-4 mt-4">
+                <!-- Javascript will render list items here -->
+            </div>
+        </section>
 
     </main>
 
     <!-- 頁尾 -->
-    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] mt-16">
-        <div class="max-w-screen-xl mx-auto py-8 px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-slate-500 text-sm">© 2024 Video Portfolio.</p>
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] mt-20">
+        <div class="max-w-screen-xl mx-auto py-10 px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 text-sm">© 2026 Video Portfolio.</p>
             <div class="flex gap-6">
                 <a href="#" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
                 <a href="#" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
@@ -212,183 +171,206 @@
         // ==========================================
         // 1. 資料設定
         // ==========================================
-        // ★★★ 編輯重點 ★★★
-        // 1. 每一個 { ... } 結束後的逗號 (,) 千萬不能少！
-        // 2. 文字內容記得用雙引號 " " 包起來
         const portfolioData = [
+            // --- 精選置頂 (6部) ---
             {
-                title: "祝福分科測驗考生 考試順利",
-                client: "立法委員何欣純",
-                category: "政治人物",
-                date: "2025-07-08",
+                featured: true, // 標記為精選
+                title: "到底是什麼飲料讓阿嬤喝到停不下來？",
+                client: "台灣綠金家園股份有限公司",
+                category: "保健食品",
+                date: "2025-12-02",
                 role: "後製剪輯",
-                views: 14000, 
-                link: "https://www.facebook.com/share/r/181geNBQUP/",
-                thumbnail: "北屯文昌廟.jpg" 
+                views: 1510000,
+                link: "https://www.facebook.com/share/v/16rJpEQuaV/?mibextid=wwXIfr",
+                thumbnail: "i01.png"
             },
             {
+                featured: true,
+                title: "突襲乃哥的包包！綠金薑黃九週年祭",
+                client: "台灣綠金家園股份有限公司",
+                category: "保健食品",
+                date: "2025-10-30",
+                role: "後製剪輯",
+                views: 491000,
+                link: "https://www.facebook.com/share/r/17vudptkUC/?mibextid=wwXIfr",
+                thumbnail: "i02.png"
+            },
+            {
+                featured: true,
                 title: "大雅超強的老趙傳統麵食館",
                 client: "立法委員何欣純",
                 category: "政治人物",
                 date: "2025-06-20",
                 role: "後製剪輯",
-                views: 137000, 
+                views: 137000,
                 link: "https://www.facebook.com/share/r/1K8hLL7ivb/?mibextid=wwXIfr",
-                thumbnail: "老趙傳統麵食.jpg" 
+                thumbnail: "i03.png"
             },
             {
-                title: "第三市場隱藏美食 小辣椒越南麵包",
-                client: "立法委員何欣純",
-                category: "政治人物",
-                date: "2025-06-16",
-                role: "後製剪輯",
-                views: 85000, 
-                link: "https://www.facebook.com/share/r/1C7z9BpDau/",
-                thumbnail: "小辣椒越南麵包.jpg"
-            },
-            {
-                title: "四民市場隱藏美食 北屯廟口米糕",
-                client: "立法委員何欣純",
-                category: "政治人物",
-                date: "2025-07-26",
-                role: "後製剪輯",
-                views: "75000",
-                link: "https://www.facebook.com/share/r/1DeQTmRfdK/",
-                thumbnail: "北屯廟口米糕.PNG"
-            },
-            {
-                title: "太平隆手工肉圓 ft.市議員張玉嬿",
-                client: "立法委員何欣純",
-                category: "政治人物",
-                date: "2025-08-13",
-                role: "剪輯",
-                views: 110000, 
-                link: "https://www.facebook.com/share/r/1BZZHRR8gP/",
-                thumbnail: "太平隆手工肉圓.PNG"
-            },
-            {
-                title: "小允兒 x 京藥妝奈米微晶拉提組",
+                featured: true,
+                title: "CR Racing重寫你對保養的想像！",
                 client: "台灣綠金家園股份有限公司",
-                category: "保養品",
-                date: "2025-09-15",
+                category: "汽車保養",
+                date: "2025-12-18",
                 role: "後製剪輯",
-                views: "", 
-                link: "https://youtube.com/shorts/VHiq0ll1ZmU?si=6EJA2vxlmNQb2pVu",
-                thumbnail: ""
+                views: 136000,
+                link: "https://www.facebook.com/share/v/1DTYazA1SM/?mibextid=wwXIfr",
+                thumbnail: "i04.png"
             },
             {
-                title: "青島佩 x momochan金賞葡聚醣",
-                client: "台灣綠金家園股份有限公司",
-                category: "保健食品",
-                date: "2025-09-18",
+                featured: true,
+                title: "為什麼女生身上都有白白的紋路？",
+                client: "Rebekah's美學",
+                category: "美業相關",
+                date: "2025-05-18",
                 role: "後製剪輯",
-                views: "", 
-                link: "https://youtube.com/shorts/nY6yX4J-lR8?si=-QoVZEHPb5Bunzrq",
-                thumbnail: "",
+                views: 264000,
+                link: "https://www.instagram.com/reel/DJy1F4Sxhiw/",
+                thumbnail: "i05.png"
             },
             {
-                title: "扒扒飯 x 家樂福熟食區的秘密",
+                featured: true,
+                title: "家樂福的隱藏美食 躲在角落的扒扒飯",
                 client: "扒扒飯有限公司",
                 category: "食品相關",
-                date: "2025-11-13",
+                date: "2025-11-06",
                 role: "後製剪輯",
-                views: "", 
-                link: "https://youtube.com/shorts/8W_nRImuhm4?si=0UkQ8CxQgZfSYRnq",
-                thumbnail: "",
+                views: 998000,
+                link: "https://www.facebook.com/share/r/1FTzpe14t2/?mibextid=wwXIfr",
+                thumbnail: "i06.png"
             },
-            {
-                title: "公主派對 x CR Racing汽/機油精",
-                client: "台灣綠金家園股份有限公司",
-                category: "車用保養",
-                date: "2025-12-15",
-                role: "後製剪輯",
-                views: 320000, 
-                link: "https://youtube.com/shorts/Vw79_4dhYBU?si=DXeopMdabTF2FPew",
-                thumbnail: "",
-            },
-             {
-                title: "徐乃麟乃哥 x 888拍賣網 綠金薑黃",
-                client: "台灣綠金家園股份有限公司",
-                category: "保健食品",
-                date: "2025-10-01",
-                role: "後製剪輯",
-                views: "", 
-                link: "https://youtube.com/shorts/-a9mAhL8V6c?si=zAL73S6ZGenJntLs",
-                thumbnail: ""
-            } // <--- 如果這是最後一個，這裡可以不加逗號，但加了也不會錯
+
+            // --- 以下為列表清單 (免縮圖) ---
+            { title: "別小看這小小一顆 它可是身體的排du引擎", client: "台灣綠金家園", category: "保健食品", date: "2025-10-09", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/v/19wPhp6uEa/?mibextid=wwXIfr" },
+            { title: "這捲毛說得好厲害 義大利專利金蜂膠", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 14000, link: "https://www.facebook.com/share/r/1BvnyJMXdS/?mibextid=wwXIfr" },
+            { title: "養髮不是一次爆發 綠金白首烏複方膠囊", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 15000, link: "https://www.facebook.com/share/r/1DdmaQGU41/?mibextid=wwXIfr" },
+            { title: "給我30秒讓我帶你認識他 綠金二型膠原", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 8506, link: "https://www.facebook.com/share/r/17vsJ9pVqF/?mibextid=wwXIfr" },
+            { title: "你不睡肝就不睡 日本樂康森醫肝臟水解物", client: "台灣綠金家園", category: "保健食品", date: "2025-10-14", role: "後製剪輯", views: 28000, link: "https://www.facebook.com/share/r/1ADgijcq71/?mibextid=wwXIfr" },
+            { title: "CR Racing正式登場 把功能性推到極致", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", views: 41000, link: "https://www.facebook.com/share/v/1FgyqPSxyx/?mibextid=wwXIfr" },
+            { title: "期待已久的CR Racing上線啦！", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", views: 488000, link: "https://www.facebook.com/share/v/1AfJMKX4oc/?mibextid=wwXIfr" },
+            { title: "太空食袋顛覆你的想像 原來飲控也可以這麼開心！", client: "台灣綠金家園", category: "保健食品", date: "2025-11-13", role: "後製剪輯", views: 12000, link: "https://www.facebook.com/share/v/1H8JD1cd4S/?mibextid=wwXIfr" },
+            { title: "5秒回彈到底是真的假的 實測新款枕頭！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-25", role: "後製剪輯", views: 39000, link: "https://www.facebook.com/share/v/1Fnz2ayEXS/?mibextid=wwXIfr" },
+            { title: "程哥&大蘋超龜毛開發的枕頭 上市啦！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-21", role: "後製剪輯", views: 54000, link: "https://www.facebook.com/share/v/1DjVaha6q6/?mibextid=wwXIfr" },
+            { title: "你知道最影響睡眠品質的就是枕頭嗎！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-20", role: "後製剪輯", views: 16000, link: "https://www.facebook.com/share/v/1Bm66oPRTo/?mibextid=wwXIfr" },
+            { title: "針對落枕或是改善睡眠品質 都非常有感", client: "台灣綠金家園", category: "生活用品", date: "2025-11-13", role: "後製剪輯", views: 21000, link: "https://www.facebook.com/share/v/1D9yaoQ8AU/?mibextid=wwXIfr" },
+            { title: "枕頭的好壞 間接影響了我們的睡眠品質？！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-06", role: "後製剪輯", views: 104000, link: "https://www.facebook.com/share/v/1bohsvDWNC/?mibextid=wwXIfr" },
+            { title: "吃老不認老要活就要動！綠金薑黃", client: "台灣綠金家園", category: "保健食品", date: "2025-10-18", role: "後製剪輯", views: 189000, link: "https://www.facebook.com/share/r/171tfa54UB/?mibextid=wwXIfr" },
+            { title: "阿嬤ㄉ偶像乃哥！現身化身人形說明書", client: "台灣綠金家園", category: "保健食品", date: "2025-10-31", role: "後製剪輯", views: 217000, link: "https://www.facebook.com/share/r/1G2Phs3w87/?mibextid=wwXIfr" },
+            { title: "直播主快問快答 讓你越喝越瘦的茶？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-16", role: "後製剪輯", views: 564000, link: "https://www.facebook.com/share/r/17uKf6G86x/?mibextid=wwXIfr" },
+            { title: "有了這個讓你體內綠燈不塞車？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-03", role: "後製剪輯", views: 384000, link: "https://www.facebook.com/share/r/1Ju8YrrH3w/?mibextid=wwXIfr" },
+            { title: "大家買的綠金薑黃收到貨了嗎？", client: "台灣綠金家園", category: "保健食品", date: "2025-09-23", role: "後製剪輯", views: 1121000, link: "https://www.facebook.com/share/r/1BTaE6rbb3/?mibextid=wwXIfr" },
+            { title: "隱身在鳳山中華街裡的「中華麵店」！", client: "扒扒飯有限公司", category: "食品相關", date: "2026-01-09", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/16mHiNZW83/?mibextid=wwXIfr" },
+            { title: "年菜救星？！扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1FCGdBt9EM/?mibextid=wwXIfr" },
+            { title: "不要再自己調火鍋醬料了！扒扒飯堅果沙茶醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/17hxBkAfRE/?mibextid=wwXIfr" },
+            { title: "隱身在高雄鳳山「被火鍋耽誤的臭豆腐店」？！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1C43B9M1ip/?mibextid=wwXIfr" },
+            { title: "挑戰五甲二路人氣爆棚的香酥臭豆腐", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/16mGTZXEQ6/?mibextid=wwXIfr" },
+            { title: "探店五甲二路上的超有名手工水餃店", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/19qHHdKkSa/?mibextid=wwXIfr" },
+            { title: "當美迪亞鍋燒遇上扒扒飯堅果沙茶醬💥", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-12", role: "後製剪輯", views: 16000, link: "https://www.facebook.com/share/r/1AEnVjsYt7/?mibextid=wwXIfr" },
+            { title: "有了這罐讓你火鍋體驗瞬間飆升300%！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-05", role: "後製剪輯", views: 132000, link: "https://www.facebook.com/share/r/1DDjiigpKE/?mibextid=wwXIfr" },
+            { title: "還在喝水解辣？偷偷告訴你解辣小撇步", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-21", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1A1bMSWZrk/?mibextid=wwXIfr" },
+            { title: "當超人氣華喜爌肉飯配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-14", role: "後製剪輯", views: 26000, link: "https://www.facebook.com/share/r/1D2Fa8kpmL/?mibextid=wwXIfr" },
+            { title: "經典阿玉魯麵遇上扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-05", role: "後製剪輯", views: 39000, link: "https://www.facebook.com/share/r/1AJuHzfkKc/?mibextid=wwXIfr" },
+            { title: "五甲在地美食豆菜麵配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-10-23", role: "後製剪輯", views: 299000, link: "https://www.facebook.com/share/r/17mXheBzPT/?mibextid=wwXIfr" },
+            { title: "祝福分科測驗考生 考試順利", client: "立法委員何欣純", category: "政治人物", date: "2025-07-08", role: "後製剪輯", views: 14000, link: "https://www.facebook.com/share/r/181geNBQUP/" },
+            { title: "第三市場隱藏美食 小辣椒越南麵包", client: "立法委員何欣純", category: "政治人物", date: "2025-06-16", role: "後製剪輯", views: 85000, link: "https://www.facebook.com/share/r/1C7z9BpDau/" },
+            { title: "四民市場隱藏美食 北屯廟口米糕", client: "立法委員何欣純", category: "政治人物", date: "2025-07-26", role: "後製剪輯", views: 75000, link: "https://www.facebook.com/share/r/1DeQTmRfdK/" },
+            { title: "太平隆手工肉圓 ft.市議員張玉嬿", client: "立法委員何欣純", category: "政治人物", date: "2025-08-13", role: "剪輯", views: 110000, link: "https://www.facebook.com/share/r/1BZZHRR8gP/" },
+            { title: "小允兒 x 京藥妝奈米微晶拉提組", client: "台灣綠金家園", category: "保養品", date: "2025-09-15", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/VHiq0ll1ZmU?si=6EJA2vxlmNQb2pVu" },
+            { title: "青島佩 x momochan金賞葡聚醣", client: "台灣綠金家園", category: "保健食品", date: "2025-09-18", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/nY6yX4J-lR8?si=-QoVZEHPb5Bunzrq" },
+            { title: "集結10年創業經驗《小電商賺大錢》", client: "沃口有限公司", category: "著做宣傳", date: "2025-12-12", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/adYN32wfYqY" },
+            { title: "意外發現餐廳秘境!海山里好厝邊", client: "元禾汽車", category: "二手汽車", date: "2025-01-05", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/3jQkRQdssgI" },
+            { title: "聖誕節必吃美食竟然是單字本?!", client: "吳凡數學", category: "補教業", date: "2024-12-20", role: "全案製作", views: "", link: "https://www.instagram.com/reel/DDzOHCRyJ03/" },
+            { title: "只要30分鐘比你去醫X還有效！！", client: "Rebekah's美學", category: "美業相關", date: "2025-08-20", role: "後製剪輯", views: 151000, link: "https://www.instagram.com/reel/DNkuNh-xFRQ/" }
         ];
 
+        // 縮圖路徑：featured 區塊需要
         const FALLBACK_THUMBNAIL = "縮圖替代.png"; 
-        const DEMO_FALLBACK = "https://placehold.co/800x600/f1f5f9/94a3b8?text=Project";
 
-        let currentView = 'grid'; 
-        let currentSort = 'date';
+        let currentSort = 'views'; // 預設改為流量排序
         
         // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
         const highlightParam = urlParams.get('h') || urlParams.get('highlight') || urlParams.get('q') || urlParams.get('tag');
 
-        let items = [...portfolioData];
-
-        const container = document.getElementById('portfolio-container');
-        const btnGrid = document.getElementById('view-grid');
-        const btnTable = document.getElementById('view-table');
+        const featuredContainer = document.getElementById('featured-container');
+        const listContainer = document.getElementById('list-container');
         const sortSelect = document.getElementById('sort-select');
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
 
-        // ==========================================
-        // 數字格式化 helper
-        // ==========================================
+        // 數字格式化 (改成完整數字格式，例如 110,000)
         function formatNumber(input) {
-            if (typeof input !== 'number') return input;
-            if (input >= 1000000) return (input / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-            if (input >= 1000) return (input / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-            return input.toString();
+            if (typeof input !== 'number') return "-";
+            return input.toLocaleString('en-US'); // 使用 toLocaleString 自動加上千分位逗號
         }
 
-        // ==========================================
-        // 解析縮圖
-        // ==========================================
-        function resolveThumbnail(item) {
-            if (item.thumbnail && item.thumbnail.trim() !== "") return item.thumbnail;
-            if (item.link) {
-                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?v=)|(shorts\/))([^#&?]*).*/;
-                const match = item.link.match(regExp);
-                if (match && match[8].length == 11) {
-                    return `https://img.youtube.com/vi/${match[8]}/maxresdefault.jpg`;
-                }
-            }
-            return FALLBACK_THUMBNAIL;
-        }
-
+        // 圖片載入失敗處理
         window.handleImageError = function(img) {
             img.onerror = null; 
-            if (img.src.includes(FALLBACK_THUMBNAIL)) {
-                 img.src = DEMO_FALLBACK;
-            } else {
-                 img.src = FALLBACK_THUMBNAIL;
-            }
+            img.src = FALLBACK_THUMBNAIL;
         }
 
-        // ==========================================
-        // 排序邏輯 (真正隱形版)
-        // ==========================================
-        function sortItems() {
-            items.sort((a, b) => {
-                // 1. 隱形置頂邏輯
-                if (highlightParam) {
+        // 渲染頁面
+        function render() {
+            // 分離資料
+            const featuredItems = portfolioData.filter(i => i.featured);
+            let listItems = portfolioData.filter(i => !i.featured);
+
+            // 1. 渲染精選區 (Featured Grid)
+            featuredContainer.innerHTML = '';
+            featuredItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "group relative bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300";
+                
+                const thumb = item.thumbnail && item.thumbnail.trim() !== "" ? item.thumbnail : FALLBACK_THUMBNAIL;
+                
+                card.innerHTML = `
+                    <a href="${item.link}" target="_blank" class="block aspect-video overflow-hidden relative">
+                        <img src="${thumb}" alt="${item.title}" onerror="handleImageError(this)" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                            <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-90 opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all text-brand-accent">
+                                <i data-lucide="play" class="w-5 h-5 fill-current ml-1"></i>
+                            </div>
+                        </div>
+                        <div class="absolute top-3 right-3">
+                            <span class="px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[10px] font-bold text-white tracking-wider border border-white/10">
+                                ${item.category}
+                            </span>
+                        </div>
+                    </a>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
+                            <!-- 精選區流量：使用金色漸層字體 -->
+                            <span class="text-sm font-black font-mono text-gradient-gold flex items-center gap-1">
+                                <i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i> ${formatNumber(item.views)}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white leading-snug mb-3 line-clamp-2 hover:text-brand-accent transition-colors">
+                            <a href="${item.link}" target="_blank">${item.title}</a>
+                        </h3>
+                        <div class="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center text-xs text-slate-500">
+                            <span>${item.role}</span>
+                            <span>${item.date}</span>
+                        </div>
+                    </div>
+                `;
+                featuredContainer.appendChild(card);
+            });
+
+            // 2. 排序列表資料
+            listItems.sort((a, b) => {
+                if (currentSort === 'featured' && highlightParam) {
                     const keyword = highlightParam.toLowerCase();
                     const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
                     const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
-
                     if (aMatch && !bMatch) return -1;
                     if (!aMatch && bMatch) return 1;
+                    return (typeof b.views === 'number' ? b.views : -1) - (typeof a.views === 'number' ? a.views : -1);
                 }
 
-                // 2. 標準排序
                 switch (currentSort) {
-                    case 'featured': // 相關優先
                     case 'date': return new Date(b.date) - new Date(a.date);
                     case 'views': 
                         let vA = (typeof a.views === 'number') ? a.views : -1;
@@ -399,164 +381,67 @@
                     default: return 0;
                 }
             });
-            render();
-        }
 
-        // ==========================================
-        // 渲染邏輯
-        // ==========================================
-        function render() {
-            container.innerHTML = '';
-            container.style.opacity = '0';
-            
-            setTimeout(() => {
-                if (window.innerWidth < 768) {
-                    renderGridView();
-                } else {
-                    if (currentView === 'grid') renderGridView();
-                    else renderTableView();
-                }
-                lucide.createIcons();
-                container.style.opacity = '1';
-            }, 100);
-        }
-
-        function renderGridView() {
-            const gridWrapper = document.createElement('div');
-            gridWrapper.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 pb-10';
-
-            items.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = `group flex flex-col bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 shadow-card hover:shadow-card-hover`;
+            // 3. 渲染列表區
+            listContainer.innerHTML = '';
+            listItems.forEach(item => {
+                const row = document.createElement('div');
                 
-                card.style.animation = `scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
-                card.style.opacity = '0';
-
-                const thumbnailSrc = resolveThumbnail(item);
-                const viewsFormatted = formatNumber(item.views);
-                const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
-
-                card.innerHTML = `
-                    <a href="${item.link}" target="_blank" class="relative w-full aspect-video overflow-hidden bg-gray-200 dark:bg-gray-800">
-                        <img 
-                            src="${thumbnailSrc}" 
-                            alt="${item.title}" 
-                            onerror="handleImageError(this)"
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        >
-                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                            <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-90 opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300 text-brand-accent">
-                                <i data-lucide="play" class="w-5 h-5 fill-current ml-1"></i>
-                            </div>
+                // Desktop Layout
+                const desktopHTML = `
+                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-xl hover:shadow-md hover:border-brand-accent/30 transition-all group">
+                        <div class="col-span-5 font-medium text-slate-900 dark:text-white truncate pr-4">
+                            <a href="${item.link}" target="_blank" class="hover:text-brand-accent flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                                    <i data-lucide="play" class="w-3 h-3 fill-current ml-0.5"></i>
+                                </span>
+                                ${item.title}
+                            </a>
                         </div>
-                        <div class="absolute top-3 left-3 flex gap-2">
-                             <span class="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] font-bold text-white tracking-wider uppercase border border-white/10">
-                                ${item.category}
+                        <div class="col-span-2 text-sm text-slate-600 dark:text-gray-400 truncate">${item.client}</div>
+                        <div class="col-span-2 text-sm font-mono text-slate-500 dark:text-gray-500">${formatNumber(item.views)}</div>
+                        <div class="col-span-2">
+                            <!-- 列表區角色標籤：增加底色與樣式 -->
+                            <span class="inline-block px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md text-xs font-medium border border-slate-300 dark:border-slate-600">
+                                ${item.role}
+                            </span>
+                        </div>
+                        <div class="col-span-1 text-right text-xs font-mono text-slate-400">${item.date}</div>
+                    </div>
+                `;
+
+                // Mobile Layout
+                const mobileHTML = `
+                    <a href="${item.link}" target="_blank" class="block md:hidden bg-white dark:bg-[#151515] p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm active:scale-[0.98] transition-transform">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-2 leading-snug line-clamp-2">${item.title}</h3>
+                        <div class="flex justify-between items-center text-xs text-slate-500 dark:text-gray-400 mb-3">
+                            <span class="font-medium text-brand-accent truncate max-w-[50%]">${item.client}</span>
+                            <!-- 手機版也加上標籤樣式 -->
+                            <span class="inline-block px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs text-slate-600 dark:text-gray-400 border border-slate-200 dark:border-slate-700">${item.role}</span>
+                        </div>
+                        <div class="flex justify-between items-end border-t border-gray-100 dark:border-gray-800 pt-3">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-xs font-mono text-slate-400">${item.date}</span>
+                                <span class="text-sm font-bold font-mono text-slate-700 dark:text-gray-300 flex items-center gap-1">
+                                    <i data-lucide="eye" class="w-3 h-3"></i> ${formatNumber(item.views)}
+                                </span>
+                            </div>
+                            <span class="w-8 h-8 rounded-full bg-brand-accent text-white flex items-center justify-center shadow-lg">
+                                <i data-lucide="play" class="w-3.5 h-3.5 fill-current ml-0.5"></i>
                             </span>
                         </div>
                     </a>
-
-                    <div class="p-5 flex flex-col flex-grow">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
-                            <div class="flex items-center gap-1.5 text-slate-400 dark:text-gray-500 text-xs font-mono">
-                                ${showViews ? `
-                                <span class="flex items-center gap-1">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                                    ${viewsFormatted}
-                                </span>
-                                <span class="opacity-30">|</span>
-                                ` : ''}
-                                <span>${item.date}</span>
-                            </div>
-                        </div>
-                        
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-gray-100 leading-snug mb-3 line-clamp-2">
-                            ${item.title}
-                        </h3>
-                        
-                        <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                            <span class="text-xs text-slate-500 dark:text-gray-500 font-medium">
-                                ${item.role}
-                            </span>
-                            
-                            <a href="${item.link}" target="_blank" class="flex items-center gap-1.5 px-4 py-2 bg-brand-accent hover:bg-blue-700 text-white text-xs font-bold rounded-full transition-colors shadow-md hover:shadow-lg transform active:scale-95">
-                                點擊觀看
-                                <i data-lucide="external-link" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
                 `;
-                gridWrapper.appendChild(card);
+
+                row.innerHTML = desktopHTML + mobileHTML;
+                listContainer.appendChild(row);
             });
-            container.appendChild(gridWrapper);
-        }
-
-        function renderTableView() {
-            const tableWrapper = document.createElement('div');
-            tableWrapper.className = 'w-full animate-fade-in-up bg-white dark:bg-[#151515] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden';
-
-             let html = `
-                <div class="w-full overflow-x-auto no-scrollbar">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 dark:bg-black/20">
-                            <tr>
-                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">專案</th>
-                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">客戶</th>
-                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">流量</th>
-                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider">負責內容</th>
-                                <th class="py-4 px-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-            `;
-
-            items.forEach((item) => {
-                const thumbnailSrc = resolveThumbnail(item);
-                const viewsFormatted = formatNumber(item.views);
-                const showViews = item.views !== "" && item.views !== undefined && item.views !== null;
-                
-                const rowClass = 'group hover:bg-gray-50 dark:hover:bg-white/5';
-
-                html += `
-                    <tr class="${rowClass} transition-colors">
-                        <td class="py-4 px-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-20 aspect-video rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 relative">
-                                    <img class="w-full h-full object-cover" src="${thumbnailSrc}" alt="" onerror="handleImageError(this)">
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-brand-accent transition-colors">${item.title}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6 text-sm text-slate-600 dark:text-gray-400">${item.client}</td>
-                        <td class="py-4 px-6">
-                            ${showViews ? `
-                            <span class="inline-flex items-center gap-1 text-sm font-mono text-slate-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                                <i data-lucide="eye" class="w-3 h-3 text-slate-400"></i> ${viewsFormatted}
-                            </span>
-                            ` : `<span class="text-xs text-slate-300 dark:text-gray-700">-</span>`}
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs text-slate-600 dark:text-gray-400">${item.role}</span>
-                        </td>
-                        <td class="py-4 px-6 text-right">
-                             <a href="${item.link}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-all">
-                                <i data-lucide="play" class="w-3.5 h-3.5 fill-current ml-0.5"></i>
-                            </a>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            html += `</tbody></table></div>`;
-            tableWrapper.innerHTML = html;
-            container.appendChild(tableWrapper);
+            
+            lucide.createIcons();
         }
 
         // ==========================================
-        // 互動與初始化
+        // 互動邏輯
         // ==========================================
         
         if (highlightParam) {
@@ -566,36 +451,20 @@
             sortSelect.insertBefore(featuredOption, sortSelect.firstChild);
             sortSelect.value = 'featured';
             currentSort = 'featured';
+        } else {
+            currentSort = 'views';
+            sortSelect.value = 'views';
         }
 
-        // UI Helpers
-        function updateViewButtons(mode) {
-            const activeClass = ['bg-white', 'dark:bg-neutral-700', 'text-slate-900', 'dark:text-white', 'shadow-sm'];
-            const inactiveClass = ['text-slate-500', 'dark:text-gray-400', 'hover:text-slate-900', 'dark:hover:text-white'];
-            
-            if (mode === 'grid') {
-                btnGrid.classList.add(...activeClass);
-                btnGrid.classList.remove(...['text-slate-500', 'hover:text-slate-900']);
-                btnTable.classList.remove(...activeClass);
-                btnTable.classList.add(...inactiveClass);
-            } else {
-                btnTable.classList.add(...activeClass);
-                btnTable.classList.remove(...['text-slate-500', 'hover:text-slate-900']);
-                btnGrid.classList.remove(...activeClass);
-                btnGrid.classList.add(...inactiveClass);
-            }
-        }
+        sortSelect.addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            render();
+        });
 
-        btnGrid.addEventListener('click', () => { currentView = 'grid'; updateViewButtons('grid'); render(); });
-        btnTable.addEventListener('click', () => { currentView = 'table'; updateViewButtons('table'); render(); });
-        sortSelect.addEventListener('change', (e) => { currentSort = e.target.value; sortItems(); });
         themeToggle.addEventListener('click', () => {
             htmlElement.classList.toggle('dark');
             localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
             setTimeout(() => lucide.createIcons(), 50);
-        });
-        window.addEventListener('resize', () => {
-            if (window.innerWidth < 768 && currentView === 'table') { currentView = 'grid'; render(); }
         });
 
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -604,8 +473,7 @@
             htmlElement.classList.remove('dark');
         }
 
-        updateViewButtons('grid');
-        sortItems(); // 這裡會觸發排序與渲染
+        render();
 
     </script>
 </body>
