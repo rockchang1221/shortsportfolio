@@ -59,14 +59,24 @@
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        /* 金色漸層文字效果 */
+        
+        /* 優化後的金色漸層效果：依據深淺模式調整色調，不使用陰影 */
         .text-gradient-gold {
-            background: linear-gradient(to right, #D4AF37, #F5E08E, #D4AF37);
+            /* 淺色模式：使用深沈的古銅金 (#854d0e -> #ca8a04 -> #854d0e)，確保在白底上清晰銳利 */
+            background: linear-gradient(135deg, #854d0e 0%, #d97706 50%, #854d0e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             background-size: 200% auto;
-            font-weight: 800;
+            font-weight: 900;
+        }
+
+        /* 深色模式：使用亮眼的黃金 (#eab308 -> #fef08a -> #eab308) */
+        .dark .text-gradient-gold {
+            background: linear-gradient(135deg, #eab308 0%, #fef08a 50%, #eab308 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -99,6 +109,9 @@
             <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
                 精選短影音作品
             </h1>
+            <p class="text-slate-500 dark:text-gray-400 text-base max-w-2xl leading-relaxed">
+                專注於視覺節奏與品牌敘事。
+            </p>
         </header>
 
         <!-- 第一區：精選置頂 (Featured) -->
@@ -126,6 +139,7 @@
                     <span class="text-sm text-slate-500 dark:text-gray-400">排序：</span>
                     <div class="relative">
                         <select id="sort-select" class="bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none shadow-sm">
+                            <option value="recommend">版主推薦 (熱門+最新)</option>
                             <option value="views">流量 (熱門優先)</option>
                             <option value="date">日期 (最新優先)</option>
                             <option value="client">客戶名稱</option>
@@ -145,7 +159,7 @@
                 <div class="col-span-1 text-right">日期</div>
             </div>
 
-            <!-- 列表內容 (已調整間距) -->
+            <!-- 列表內容 -->
             <div id="list-container" class="space-y-4 mt-4">
                 <!-- Javascript will render list items here -->
             </div>
@@ -173,7 +187,7 @@
             {
                 featured: true, // 標記為精選
                 title: "到底是什麼飲料讓阿嬤喝到停不下來？",
-                client: "台灣綠金家園股份有限公司",
+                client: "台灣綠金家園",
                 category: "保健食品",
                 date: "2025-12-02",
                 role: "後製剪輯",
@@ -184,7 +198,7 @@
             {
                 featured: true,
                 title: "突襲乃哥的包包！綠金薑黃九週年祭",
-                client: "台灣綠金家園股份有限公司",
+                client: "台灣綠金家園",
                 category: "保健食品",
                 date: "2025-10-30",
                 role: "後製剪輯",
@@ -206,7 +220,7 @@
             {
                 featured: true,
                 title: "CR Racing重寫你對保養的想像！",
-                client: "台灣綠金家園股份有限公司",
+                client: "台灣綠金家園",
                 category: "汽車保養",
                 date: "2025-12-18",
                 role: "後製剪輯",
@@ -283,7 +297,7 @@
         // 縮圖路徑：featured 區塊需要
         const FALLBACK_THUMBNAIL = "縮圖替代.png"; 
 
-        let currentSort = 'views'; // 預設改為流量排序
+        let currentSort = 'recommend'; // 預設改為版主推薦
         
         // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
@@ -310,8 +324,54 @@
         // 渲染頁面
         function render() {
             // 分離資料
-            const featuredItems = portfolioData.filter(i => i.featured);
+            let featuredItems = portfolioData.filter(i => i.featured);
             let listItems = portfolioData.filter(i => !i.featured);
+
+            // ==========================================
+            // 排序邏輯 (共用函數，用於所有列表)
+            // ==========================================
+            const sortFunction = (a, b) => {
+                // 1. 隱形置頂邏輯 (優先權最高，只有在 "related" 或 "recommend" 且有參數時生效)
+                if ((currentSort === 'featured' || currentSort === 'recommend') && highlightParam) {
+                    const keyword = highlightParam.toLowerCase();
+                    const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
+                    const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
+
+                    if (aMatch && !bMatch) return -1;
+                    if (!aMatch && bMatch) return 1;
+                    // 若都符合或都不符合，繼續執行下面的排序
+                }
+
+                // 2. 標準排序
+                switch (currentSort) {
+                    case 'recommend': 
+                    case 'featured': // 如果沒有 keyword，featured/recommend 走智慧排序
+                        // 智慧加權演算法：分數 = 流量 + (新鮮度加分)
+                        // 設定：30天內的新片，獲得 50,000 分的加權 (相當於5萬流量)
+                        const getScore = (item) => {
+                            const views = typeof item.views === 'number' ? item.views : 0;
+                            const daysOld = (new Date() - new Date(item.date)) / (1000 * 60 * 60 * 24);
+                            const recencyBonus = daysOld < 30 ? 50000 : 0; 
+                            // 也可以用更平滑的衰減公式： return views + (200000 / (daysOld + 1));
+                            return views + recencyBonus;
+                        };
+                        return getScore(b) - getScore(a);
+
+                    case 'date': return new Date(b.date) - new Date(a.date);
+                    case 'views': 
+                        let vA = (typeof a.views === 'number') ? a.views : -1;
+                        let vB = (typeof b.views === 'number') ? b.views : -1;
+                        return vB - vA;
+                    case 'client': return a.client.localeCompare(b.client, 'zh-Hant');
+                    case 'category': return a.category.localeCompare(b.category, 'zh-Hant');
+                    default: return 0;
+                }
+            };
+
+            // 應用排序
+            // 注意：featured 區塊現在也會跟著排序了！
+            featuredItems.sort(sortFunction);
+            listItems.sort(sortFunction);
 
             // 1. 渲染精選區 (Featured Grid)
             featuredContainer.innerHTML = '';
@@ -354,29 +414,6 @@
                     </div>
                 `;
                 featuredContainer.appendChild(card);
-            });
-
-            // 2. 排序列表資料
-            listItems.sort((a, b) => {
-                if (currentSort === 'featured' && highlightParam) {
-                    const keyword = highlightParam.toLowerCase();
-                    const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
-                    const bMatch = (b.client && b.client.toLowerCase().includes(keyword)) || (b.category && b.category.toLowerCase().includes(keyword));
-                    if (aMatch && !bMatch) return -1;
-                    if (!aMatch && bMatch) return 1;
-                    return (typeof b.views === 'number' ? b.views : -1) - (typeof a.views === 'number' ? a.views : -1);
-                }
-
-                switch (currentSort) {
-                    case 'date': return new Date(b.date) - new Date(a.date);
-                    case 'views': 
-                        let vA = (typeof a.views === 'number') ? a.views : -1;
-                        let vB = (typeof b.views === 'number') ? b.views : -1;
-                        return vB - vA;
-                    case 'client': return a.client.localeCompare(b.client, 'zh-Hant');
-                    case 'category': return a.category.localeCompare(b.category, 'zh-Hant');
-                    default: return 0;
-                }
             });
 
             // 3. 渲染列表區
@@ -449,8 +486,9 @@
             sortSelect.value = 'featured';
             currentSort = 'featured';
         } else {
-            currentSort = 'views';
-            sortSelect.value = 'views';
+            // 預設排序設為 recommend (版主推薦)
+            currentSort = 'recommend';
+            sortSelect.value = 'recommend';
         }
 
         sortSelect.addEventListener('change', (e) => {
