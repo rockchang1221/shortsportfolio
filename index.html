@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-TW" class="light">
 <head>
@@ -60,9 +61,8 @@
             100% { opacity: 1; transform: translateY(0); }
         }
         
-        /* 優化後的金色漸層效果：依據深淺模式調整色調，不使用陰影 */
+        /* 金色漸層文字效果 */
         .text-gradient-gold {
-            /* 淺色模式：使用深沈的古銅金 (#854d0e -> #ca8a04 -> #854d0e)，確保在白底上清晰銳利 */
             background: linear-gradient(135deg, #854d0e 0%, #d97706 50%, #854d0e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -70,8 +70,6 @@
             background-size: 200% auto;
             font-weight: 900;
         }
-
-        /* 深色模式：使用亮眼的黃金 (#eab308 -> #fef08a -> #eab308) */
         .dark .text-gradient-gold {
             background: linear-gradient(135deg, #eab308 0%, #fef08a 50%, #eab308 100%);
             -webkit-background-clip: text;
@@ -148,11 +146,12 @@
             </div>
 
             <!-- 列表容器 (標題列) -->
+            <!-- 為了塞下規格標籤，微調了 col-span 的比例 -->
             <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-800">
-                <div class="col-span-5">專案名稱 / 連結</div>
+                <div class="col-span-4">專案名稱 / 連結</div>
                 <div class="col-span-2">客戶</div>
                 <div class="col-span-2">流量</div>
-                <div class="col-span-2">負責內容</div>
+                <div class="col-span-3">規格 / 內容</div>
                 <div class="col-span-1 text-right">日期</div>
             </div>
 
@@ -169,25 +168,46 @@
         <div class="max-w-screen-xl mx-auto py-10 px-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-slate-500 text-sm">© 2026 Video Portfolio.</p>
             <div class="flex gap-6">
-                <a href="https://www.instagram.com/rrock.1221?igsh=MWo1M3QwYjdlZGFtZg==" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="rainchang931221@gmail.com" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
+                <a href="https://www.instagram.com/rrock.1221?igsh=MWo1M3QwYjdlZGFtZg==" target="_blank" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                <a href="mailto:rainchang931221@gmail.com" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
             </div>
         </div>
     </footer>
 
     <script>
         // ==========================================
-        // 1. 資料設定
+        // 1. 自動顏色標籤系統 (自動判別 Premium)
+        // ==========================================
+        // 只要 spec 包含 "Premium" 或 "premium"，就會自動給金色的樣式
+        function getSpecStyle(spec, type) {
+            const isPremium = spec && spec.toLowerCase().includes('premium');
+            
+            if (type === 'featured') {
+                // 圖片上的徽章樣式
+                return isPremium 
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-white border-yellow-300/50 shadow-lg" // Premium 金色
+                    : "bg-blue-600/90 text-white border-blue-400/50"; // 標準 藍色
+            } else {
+                // 列表上的標籤樣式
+                return isPremium
+                    ? "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" // Premium 金色底
+                    : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"; // 標準 藍色底
+            }
+        }
+
+        // ==========================================
+        // 2. 資料設定 (已加入 spec 屬性)
         // ==========================================
         const portfolioData = [
             // --- 精選置頂 (6部) ---
             {
-                featured: true, // 標記為精選
+                featured: true, 
                 title: "到底是什麼飲料讓阿嬤喝到停不下來？",
                 client: "台灣綠金家園",
                 category: "保健食品",
                 date: "2025-12-02",
                 role: "後製剪輯",
+                spec: "標準製作規格", // 您可隨意改為 "Premium製作規格" 測試效果
                 views: 1510000,
                 link: "https://www.facebook.com/share/v/16rJpEQuaV/?mibextid=wwXIfr",
                 thumbnail: "i01.png"
@@ -199,6 +219,7 @@
                 category: "保健食品",
                 date: "2025-10-30",
                 role: "後製剪輯",
+                spec: "Premium製作規格",
                 views: 491000,
                 link: "https://www.facebook.com/share/r/17vudptkUC/?mibextid=wwXIfr",
                 thumbnail: "i02.png"
@@ -209,7 +230,8 @@
                 client: "立法委員何欣純",
                 category: "政治人物",
                 date: "2025-06-20",
-                role: "後製剪輯",
+                role: "Premium製作規格",
+                spec: "標準製作規格",
                 views: 137000,
                 link: "https://www.facebook.com/share/r/1K8hLL7ivb/?mibextid=wwXIfr",
                 thumbnail: "i03.png"
@@ -221,6 +243,7 @@
                 category: "汽車保養",
                 date: "2025-12-18",
                 role: "後製剪輯",
+                spec: "Premium製作規格", // 預設一個 Premium 給您看效果
                 views: 136000,
                 link: "https://www.facebook.com/share/v/1DTYazA1SM/?mibextid=wwXIfr",
                 thumbnail: "i04.png"
@@ -232,6 +255,7 @@
                 category: "美業相關",
                 date: "2025-05-18",
                 role: "後製剪輯",
+                spec: "標準製作規格",
                 views: 264000,
                 link: "https://www.instagram.com/reel/DJy1F4Sxhiw/",
                 thumbnail: "i05.png"
@@ -242,53 +266,54 @@
                 client: "扒扒飯有限公司",
                 category: "食品相關",
                 date: "2025-11-06",
-                role: "後製剪輯",
+                role: "Premium製作規格",
+                spec: "標準製作規格",
                 views: 998000,
                 link: "https://www.facebook.com/share/r/1FTzpe14t2/?mibextid=wwXIfr",
                 thumbnail: "i06.png"
             },
 
-            // --- 以下為列表清單 (免縮圖) ---
-            { title: "別小看這小小一顆 它可是身體的排du引擎", client: "台灣綠金家園", category: "保健食品", date: "2025-10-09", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/v/19wPhp6uEa/?mibextid=wwXIfr" },
-            { title: "這捲毛說得好厲害 義大利專利金蜂膠", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 14000, link: "https://www.facebook.com/share/r/1BvnyJMXdS/?mibextid=wwXIfr" },
-            { title: "養髮不是一次爆發 綠金白首烏複方膠囊", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 15000, link: "https://www.facebook.com/share/r/1DdmaQGU41/?mibextid=wwXIfr" },
-            { title: "給我30秒讓我帶你認識他 綠金二型膠原", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", views: 8506, link: "https://www.facebook.com/share/r/17vsJ9pVqF/?mibextid=wwXIfr" },
-            { title: "你不睡肝就不睡 日本樂康森醫肝臟水解物", client: "台灣綠金家園", category: "保健食品", date: "2025-10-14", role: "後製剪輯", views: 28000, link: "https://www.facebook.com/share/r/1ADgijcq71/?mibextid=wwXIfr" },
-            { title: "CR Racing正式登場 把功能性推到極致", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", views: 41000, link: "https://www.facebook.com/share/v/1FgyqPSxyx/?mibextid=wwXIfr" },
-            { title: "期待已久的CR Racing上線啦！", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", views: 488000, link: "https://www.facebook.com/share/v/1AfJMKX4oc/?mibextid=wwXIfr" },
-            { title: "太空食袋顛覆你的想像 原來飲控也可以這麼開心！", client: "台灣綠金家園", category: "保健食品", date: "2025-11-13", role: "後製剪輯", views: 12000, link: "https://www.facebook.com/share/v/1H8JD1cd4S/?mibextid=wwXIfr" },
-            { title: "5秒回彈到底是真的假的 實測新款枕頭！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-25", role: "後製剪輯", views: 39000, link: "https://www.facebook.com/share/v/1Fnz2ayEXS/?mibextid=wwXIfr" },
-            { title: "程哥&大蘋超龜毛開發的枕頭 上市啦！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-21", role: "後製剪輯", views: 54000, link: "https://www.facebook.com/share/v/1DjVaha6q6/?mibextid=wwXIfr" },
-            { title: "你知道最影響睡眠品質的就是枕頭嗎！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-20", role: "後製剪輯", views: 16000, link: "https://www.facebook.com/share/v/1Bm66oPRTo/?mibextid=wwXIfr" },
-            { title: "針對落枕或是改善睡眠品質 都非常有感", client: "台灣綠金家園", category: "生活用品", date: "2025-11-13", role: "後製剪輯", views: 21000, link: "https://www.facebook.com/share/v/1D9yaoQ8AU/?mibextid=wwXIfr" },
-            { title: "枕頭的好壞 間接影響了我們的睡眠品質？！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-06", role: "後製剪輯", views: 104000, link: "https://www.facebook.com/share/v/1bohsvDWNC/?mibextid=wwXIfr" },
-            { title: "吃老不認老要活就要動！綠金薑黃", client: "台灣綠金家園", category: "保健食品", date: "2025-10-18", role: "後製剪輯", views: 189000, link: "https://www.facebook.com/share/r/171tfa54UB/?mibextid=wwXIfr" },
-            { title: "阿嬤ㄉ偶像乃哥！現身化身人形說明書", client: "台灣綠金家園", category: "保健食品", date: "2025-10-31", role: "後製剪輯", views: 217000, link: "https://www.facebook.com/share/r/1G2Phs3w87/?mibextid=wwXIfr" },
-            { title: "直播主快問快答 讓你越喝越瘦的茶？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-16", role: "後製剪輯", views: 564000, link: "https://www.facebook.com/share/r/17uKf6G86x/?mibextid=wwXIfr" },
-            { title: "有了這個讓你體內綠燈不塞車？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-03", role: "後製剪輯", views: 384000, link: "https://www.facebook.com/share/r/1Ju8YrrH3w/?mibextid=wwXIfr" },
-            { title: "大家買的綠金薑黃收到貨了嗎？", client: "台灣綠金家園", category: "保健食品", date: "2025-09-23", role: "後製剪輯", views: 1121000, link: "https://www.facebook.com/share/r/1BTaE6rbb3/?mibextid=wwXIfr" },
-            { title: "隱身在鳳山中華街裡的「中華麵店」！", client: "扒扒飯有限公司", category: "食品相關", date: "2026-01-09", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/16mHiNZW83/?mibextid=wwXIfr" },
-            { title: "年菜救星？！扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1FCGdBt9EM/?mibextid=wwXIfr" },
-            { title: "不要再自己調火鍋醬料了！扒扒飯堅果沙茶醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/17hxBkAfRE/?mibextid=wwXIfr" },
-            { title: "隱身在高雄鳳山「被火鍋耽誤的臭豆腐店」？！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1C43B9M1ip/?mibextid=wwXIfr" },
-            { title: "挑戰五甲二路人氣爆棚的香酥臭豆腐", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/16mGTZXEQ6/?mibextid=wwXIfr" },
-            { title: "探店五甲二路上的超有名手工水餃店", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/19qHHdKkSa/?mibextid=wwXIfr" },
-            { title: "當美迪亞鍋燒遇上扒扒飯堅果沙茶醬💥", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-12", role: "後製剪輯", views: 16000, link: "https://www.facebook.com/share/r/1AEnVjsYt7/?mibextid=wwXIfr" },
-            { title: "有了這罐讓你火鍋體驗瞬間飆升300%！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-05", role: "後製剪輯", views: 132000, link: "https://www.facebook.com/share/r/1DDjiigpKE/?mibextid=wwXIfr" },
-            { title: "還在喝水解辣？偷偷告訴你解辣小撇步", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-21", role: "後製剪輯", views: "", link: "https://www.facebook.com/share/r/1A1bMSWZrk/?mibextid=wwXIfr" },
-            { title: "當超人氣華喜爌肉飯配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-14", role: "後製剪輯", views: 26000, link: "https://www.facebook.com/share/r/1D2Fa8kpmL/?mibextid=wwXIfr" },
-            { title: "經典阿玉魯麵遇上扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-05", role: "後製剪輯", views: 39000, link: "https://www.facebook.com/share/r/1AJuHzfkKc/?mibextid=wwXIfr" },
-            { title: "五甲在地美食豆菜麵配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-10-23", role: "後製剪輯", views: 299000, link: "https://www.facebook.com/share/r/17mXheBzPT/?mibextid=wwXIfr" },
-            { title: "祝福分科測驗考生 考試順利", client: "立法委員何欣純", category: "政治人物", date: "2025-07-08", role: "後製剪輯", views: 14000, link: "https://www.facebook.com/share/r/181geNBQUP/" },
-            { title: "第三市場隱藏美食 小辣椒越南麵包", client: "立法委員何欣純", category: "政治人物", date: "2025-06-16", role: "後製剪輯", views: 85000, link: "https://www.facebook.com/share/r/1C7z9BpDau/" },
-            { title: "四民市場隱藏美食 北屯廟口米糕", client: "立法委員何欣純", category: "政治人物", date: "2025-07-26", role: "後製剪輯", views: 75000, link: "https://www.facebook.com/share/r/1DeQTmRfdK/" },
-            { title: "太平隆手工肉圓 ft.市議員張玉嬿", client: "立法委員何欣純", category: "政治人物", date: "2025-08-13", role: "剪輯", views: 110000, link: "https://www.facebook.com/share/r/1BZZHRR8gP/" },
-            { title: "小允兒 x 京藥妝奈米微晶拉提組", client: "台灣綠金家園", category: "保養品", date: "2025-09-15", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/VHiq0ll1ZmU?si=6EJA2vxlmNQb2pVu" },
-            { title: "青島佩 x momochan金賞葡聚醣", client: "台灣綠金家園", category: "保健食品", date: "2025-09-18", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/nY6yX4J-lR8?si=-QoVZEHPb5Bunzrq" },
-            { title: "集結10年創業經驗《小電商賺大錢》", client: "沃口有限公司", category: "著做宣傳", date: "2025-12-12", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/adYN32wfYqY" },
-            { title: "意外發現餐廳秘境!海山里好厝邊", client: "元禾汽車", category: "二手汽車", date: "2025-01-05", role: "後製剪輯", views: "", link: "https://youtube.com/shorts/3jQkRQdssgI" },
-            { title: "聖誕節必吃美食竟然是單字本?!", client: "吳凡數學", category: "補教業", date: "2024-12-20", role: "全案製作", views: "", link: "https://www.instagram.com/reel/DDzOHCRyJ03/" },
-            { title: "只要30分鐘比你去醫X還有效！！", client: "Rebekah's美學", category: "美業相關", date: "2025-08-20", role: "後製剪輯", views: 151000, link: "https://www.instagram.com/reel/DNkuNh-xFRQ/" }
+            // --- 以下為列表清單 ---
+            { title: "別小看這小小一顆 它可是身體的排du引擎", client: "台灣綠金家園", category: "保健食品", date: "2025-10-09", role: "後製剪輯", spec: "標準製作規格", views: "", link: "https://www.facebook.com/share/v/19wPhp6uEa/?mibextid=wwXIfr" },
+            { title: "這捲毛說得好厲害 義大利專利金蜂膠", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", spec: "標準製作規格", views: 14000, link: "https://www.facebook.com/share/r/1BvnyJMXdS/?mibextid=wwXIfr" },
+            { title: "養髮不是一次爆發 綠金白首烏複方膠囊", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", spec: "標準製作規格", views: 15000, link: "https://www.facebook.com/share/r/1DdmaQGU41/?mibextid=wwXIfr" },
+            { title: "給我30秒讓我帶你認識他 綠金二型膠原", client: "台灣綠金家園", category: "保健食品", date: "2025-10-23", role: "後製剪輯", spec: "標準製作規格", views: 8506, link: "https://www.facebook.com/share/r/17vsJ9pVqF/?mibextid=wwXIfr" },
+            { title: "你不睡肝就不睡 日本樂康森醫肝臟水解物", client: "台灣綠金家園", category: "保健食品", date: "2025-10-14", role: "後製剪輯", spec: "標準製作規格", views: 28000, link: "https://www.facebook.com/share/r/1ADgijcq71/?mibextid=wwXIfr" },
+            { title: "CR Racing正式登場 把功能性推到極致", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", spec: "標準製作規格", views: 41000, link: "https://www.facebook.com/share/v/1FgyqPSxyx/?mibextid=wwXIfr" },
+            { title: "期待已久的CR Racing上線啦！", client: "台灣綠金家園", category: "汽車保養", date: "2025-12-11", role: "後製剪輯", spec: "標準製作規格", views: 488000, link: "https://www.facebook.com/share/v/1AfJMKX4oc/?mibextid=wwXIfr" },
+            { title: "太空食袋顛覆你的想像 原來飲控也可以這麼開心！", client: "台灣綠金家園", category: "保健食品", date: "2025-11-13", role: "後製剪輯", spec: "標準製作規格", views: 12000, link: "https://www.facebook.com/share/v/1H8JD1cd4S/?mibextid=wwXIfr" },
+            { title: "5秒回彈到底是真的假的 實測新款枕頭！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-25", role: "後製剪輯", spec: "標準製作規格", views: 39000, link: "https://www.facebook.com/share/v/1Fnz2ayEXS/?mibextid=wwXIfr" },
+            { title: "程哥&大蘋超龜毛開發的枕頭 上市啦！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-21", role: "後製剪輯", spec: "標準製作規格", views: 54000, link: "https://www.facebook.com/share/v/1DjVaha6q6/?mibextid=wwXIfr" },
+            { title: "你知道最影響睡眠品質的就是枕頭嗎！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-20", role: "後製剪輯", spec: "標準製作規格", views: 16000, link: "https://www.facebook.com/share/v/1Bm66oPRTo/?mibextid=wwXIfr" },
+            { title: "針對落枕或是改善睡眠品質 都非常有感", client: "台灣綠金家園", category: "生活用品", date: "2025-11-13", role: "後製剪輯", spec: "標準製作規格", views: 21000, link: "https://www.facebook.com/share/v/1D9yaoQ8AU/?mibextid=wwXIfr" },
+            { title: "枕頭的好壞 間接影響了我們的睡眠品質？！", client: "台灣綠金家園", category: "生活用品", date: "2025-11-06", role: "後製剪輯", spec: "標準製作規格", views: 104000, link: "https://www.facebook.com/share/v/1bohsvDWNC/?mibextid=wwXIfr" },
+            { title: "吃老不認老要活就要動！綠金薑黃", client: "台灣綠金家園", category: "保健食品", date: "2025-10-18", role: "後製剪輯", spec: "標準製作規格", views: 189000, link: "https://www.facebook.com/share/r/171tfa54UB/?mibextid=wwXIfr" },
+            { title: "阿嬤ㄉ偶像乃哥！現身化身人形說明書", client: "台灣綠金家園", category: "保健食品", date: "2025-10-31", role: "後製剪輯", spec: "Premium製作規格", views: 217000, link: "https://www.facebook.com/share/r/1G2Phs3w87/?mibextid=wwXIfr" },
+            { title: "直播主快問快答 讓你越喝越瘦的茶？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-16", role: "後製剪輯", spec: "標準製作規格", views: 564000, link: "https://www.facebook.com/share/r/17uKf6G86x/?mibextid=wwXIfr" },
+            { title: "有了這個讓你體內綠燈不塞車？！", client: "台灣綠金家園", category: "保健食品", date: "2025-10-03", role: "後製剪輯", spec: "標準製作規格", views: 384000, link: "https://www.facebook.com/share/r/1Ju8YrrH3w/?mibextid=wwXIfr" },
+            { title: "大家買的綠金薑黃收到貨了嗎？", client: "台灣綠金家園", category: "保健食品", date: "2025-09-23", role: "後製剪輯", spec: "標準製作規格", views: 1121000, link: "https://www.facebook.com/share/r/1BTaE6rbb3/?mibextid=wwXIfr" },
+            { title: "隱身在鳳山中華街裡的「中華麵店」！", client: "扒扒飯有限公司", category: "食品相關", date: "2026-01-09", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/16mHiNZW83/?mibextid=wwXIfr" },
+            { title: "年菜救星？！扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/1FCGdBt9EM/?mibextid=wwXIfr" },
+            { title: "不要再自己調火鍋醬料了！扒扒飯堅果沙茶醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/17hxBkAfRE/?mibextid=wwXIfr" },
+            { title: "隱身在高雄鳳山「被火鍋耽誤的臭豆腐店」？！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-26", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/1C43B9M1ip/?mibextid=wwXIfr" },
+            { title: "挑戰五甲二路人氣爆棚的香酥臭豆腐", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/16mGTZXEQ6/?mibextid=wwXIfr" },
+            { title: "探店五甲二路上的超有名手工水餃店", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-19", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/19qHHdKkSa/?mibextid=wwXIfr" },
+            { title: "當美迪亞鍋燒遇上扒扒飯堅果沙茶醬💥", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-12", role: "後製剪輯", spec: "Premium製作規格", views: 16000, link: "https://www.facebook.com/share/r/1AEnVjsYt7/?mibextid=wwXIfr" },
+            { title: "有了這罐讓你火鍋體驗瞬間飆升300%！", client: "扒扒飯有限公司", category: "食品相關", date: "2025-12-05", role: "後製剪輯", spec: "Premium製作規格", views: 132000, link: "https://www.facebook.com/share/r/1DDjiigpKE/?mibextid=wwXIfr" },
+            { title: "還在喝水解辣？偷偷告訴你解辣小撇步", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-21", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://www.facebook.com/share/r/1A1bMSWZrk/?mibextid=wwXIfr" },
+            { title: "當超人氣華喜爌肉飯配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-14", role: "後製剪輯", spec: "Premium製作規格", views: 26000, link: "https://www.facebook.com/share/r/1D2Fa8kpmL/?mibextid=wwXIfr" },
+            { title: "經典阿玉魯麵遇上扒扒飯干貝醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-11-05", role: "後製剪輯", spec: "Premium製作規格", views: 39000, link: "https://www.facebook.com/share/r/1AJuHzfkKc/?mibextid=wwXIfr" },
+            { title: "五甲在地美食豆菜麵配上扒扒飯雙椒醬", client: "扒扒飯有限公司", category: "食品相關", date: "2025-10-23", role: "後製剪輯", spec: "Premium製作規格", views: 299000, link: "https://www.facebook.com/share/r/17mXheBzPT/?mibextid=wwXIfr" },
+            { title: "祝福分科測驗考生 考試順利", client: "立法委員何欣純", category: "政治人物", date: "2025-07-08", role: "後製剪輯", spec: "Premium製作規格", views: 14000, link: "https://www.facebook.com/share/r/181geNBQUP/" },
+            { title: "第三市場隱藏美食 小辣椒越南麵包", client: "立法委員何欣純", category: "政治人物", date: "2025-06-16", role: "後製剪輯", spec: "Premium製作規格", views: 85000, link: "https://www.facebook.com/share/r/1C7z9BpDau/" },
+            { title: "四民市場隱藏美食 北屯廟口米糕", client: "立法委員何欣純", category: "政治人物", date: "2025-07-26", role: "後製剪輯", spec: "Premium製作規格", views: 75000, link: "https://www.facebook.com/share/r/1DeQTmRfdK/" },
+            { title: "太平隆手工肉圓 ft.市議員張玉嬿", client: "立法委員何欣純", category: "政治人物", date: "2025-08-13", role: "剪輯", spec: "Premium製作規格", views: 110000, link: "https://www.facebook.com/share/r/1BZZHRR8gP/" },
+            { title: "小允兒 x 京藥妝奈米微晶拉提組", client: "台灣綠金家園", category: "保養品", date: "2025-09-15", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://youtube.com/shorts/VHiq0ll1ZmU?si=6EJA2vxlmNQb2pVu" },
+            { title: "青島佩 x momochan金賞葡聚醣", client: "台灣綠金家園", category: "保健食品", date: "2025-09-18", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://youtube.com/shorts/nY6yX4J-lR8?si=-QoVZEHPb5Bunzrq" },
+            { title: "集結10年創業經驗《小電商賺大錢》", client: "沃口有限公司", category: "著做宣傳", date: "2025-12-12", role: "後製剪輯", spec: "Premium製作規格", views: "", link: "https://youtube.com/shorts/adYN32wfYqY" },
+            { title: "意外發現餐廳秘境!海山里好厝邊", client: "元禾汽車", category: "二手汽車", date: "2025-01-05", role: "後製剪輯", spec: "標準製作規格", views: "", link: "https://youtube.com/shorts/3jQkRQdssgI" },
+            { title: "聖誕節必吃美食竟然是單字本?!", client: "吳凡數學", category: "補教業", date: "2024-12-20", role: "全案製作", spec: "標準製作規格", views: "", link: "https://www.instagram.com/reel/DDzOHCRyJ03/" },
+            { title: "只要30分鐘比你去醫X還有效！！", client: "Rebekah's美學", category: "美業相關", date: "2025-08-20", role: "後製剪輯", spec: "標準製作規格", views: 151000, link: "https://www.instagram.com/reel/DNkuNh-xFRQ/" }
         ];
 
         // 縮圖路徑：featured 區塊需要
@@ -306,10 +331,10 @@
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
 
-        // 數字格式化 (改成完整數字格式，例如 110,000)
+        // 數字格式化
         function formatNumber(input) {
             if (typeof input !== 'number') return "-";
-            return input.toLocaleString('en-US'); // 使用 toLocaleString 自動加上千分位逗號
+            return input.toLocaleString('en-US'); 
         }
 
         // 圖片載入失敗處理
@@ -325,10 +350,9 @@
             let listItems = portfolioData.filter(i => !i.featured);
 
             // ==========================================
-            // 排序邏輯 (共用函數，用於所有列表)
+            // 排序邏輯
             // ==========================================
             const sortFunction = (a, b) => {
-                // 1. 隱形置頂邏輯 (優先權最高，只有在 "related" 或 "recommend" 且有參數時生效)
                 if ((currentSort === 'featured' || currentSort === 'recommend') && highlightParam) {
                     const keyword = highlightParam.toLowerCase();
                     const aMatch = (a.client && a.client.toLowerCase().includes(keyword)) || (a.category && a.category.toLowerCase().includes(keyword));
@@ -336,20 +360,15 @@
 
                     if (aMatch && !bMatch) return -1;
                     if (!aMatch && bMatch) return 1;
-                    // 若都符合或都不符合，繼續執行下面的排序
                 }
 
-                // 2. 標準排序
                 switch (currentSort) {
                     case 'recommend': 
-                    case 'featured': // 如果沒有 keyword，featured/recommend 走智慧排序
-                        // 智慧加權演算法：分數 = 流量 + (新鮮度加分)
-                        // 設定：30天內的新片，獲得 50,000 分的加權 (相當於5萬流量)
+                    case 'featured': 
                         const getScore = (item) => {
                             const views = typeof item.views === 'number' ? item.views : 0;
                             const daysOld = (new Date() - new Date(item.date)) / (1000 * 60 * 60 * 24);
                             const recencyBonus = daysOld < 30 ? 50000 : 0; 
-                            // 也可以用更平滑的衰減公式： return views + (200000 / (daysOld + 1));
                             return views + recencyBonus;
                         };
                         return getScore(b) - getScore(a);
@@ -365,18 +384,19 @@
                 }
             };
 
-            // 應用排序
-            // 注意：featured 區塊現在也會跟著排序了！
             featuredItems.sort(sortFunction);
             listItems.sort(sortFunction);
 
+            // ==========================================
             // 1. 渲染精選區 (Featured Grid)
+            // ==========================================
             featuredContainer.innerHTML = '';
             featuredItems.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = "group relative bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300";
                 
                 const thumb = item.thumbnail && item.thumbnail.trim() !== "" ? item.thumbnail : FALLBACK_THUMBNAIL;
+                const specClass = getSpecStyle(item.spec, 'featured');
                 
                 card.innerHTML = `
                     <a href="${item.link}" target="_blank" class="block aspect-video overflow-hidden relative">
@@ -387,7 +407,12 @@
                                 <i data-lucide="play" class="w-5 h-5 fill-current ml-1"></i>
                             </div>
                         </div>
-                        <div class="absolute top-3 right-3">
+                        
+                        <!-- 圖片上的雙標籤 -->
+                        <div class="absolute top-3 right-3 flex gap-1.5">
+                            <span class="px-2 py-1 backdrop-blur-md rounded text-[10px] font-bold tracking-wider border ${specClass}">
+                                ${item.spec}
+                            </span>
                             <span class="px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[10px] font-bold text-white tracking-wider border border-white/10">
                                 ${item.category}
                             </span>
@@ -396,7 +421,6 @@
                     <div class="p-5">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-bold text-brand-accent uppercase tracking-widest">${item.client}</span>
-                            <!-- 精選區流量：使用金色漸層字體 -->
                             <span class="text-sm font-black font-mono text-gradient-gold flex items-center gap-1">
                                 <i data-lucide="eye" class="w-4 h-4 text-yellow-500"></i> ${formatNumber(item.views)}
                             </span>
@@ -413,15 +437,18 @@
                 featuredContainer.appendChild(card);
             });
 
-            // 3. 渲染列表區
+            // ==========================================
+            // 2. 渲染列表區 (Archive List)
+            // ==========================================
             listContainer.innerHTML = '';
             listItems.forEach(item => {
                 const row = document.createElement('div');
+                const specClass = getSpecStyle(item.spec, 'list');
                 
                 // Desktop Layout
                 const desktopHTML = `
                     <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white dark:bg-[#151515] border border-gray-100 dark:border-gray-800 rounded-xl hover:shadow-md hover:border-brand-accent/30 transition-all group">
-                        <div class="col-span-5 font-medium text-slate-900 dark:text-white truncate pr-4">
+                        <div class="col-span-4 font-medium text-slate-900 dark:text-white truncate pr-4">
                             <a href="${item.link}" target="_blank" class="hover:text-brand-accent flex items-center gap-2">
                                 <span class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-brand-accent group-hover:text-white transition-colors">
                                     <i data-lucide="play" class="w-3 h-3 fill-current ml-0.5"></i>
@@ -431,12 +458,17 @@
                         </div>
                         <div class="col-span-2 text-sm text-slate-600 dark:text-gray-400 truncate">${item.client}</div>
                         <div class="col-span-2 text-sm font-mono text-slate-500 dark:text-gray-500">${formatNumber(item.views)}</div>
-                        <div class="col-span-2">
-                            <!-- 列表區角色標籤：增加底色與樣式 -->
-                            <span class="inline-block px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-md text-xs font-medium border border-slate-300 dark:border-slate-600">
+                        
+                        <!-- 規格與角色標籤 -->
+                        <div class="col-span-3 flex flex-wrap gap-1.5 items-center">
+                            <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium border ${specClass}">
+                                ${item.spec}
+                            </span>
+                            <span class="inline-block px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[11px] text-slate-600 dark:text-gray-400 border border-slate-200 dark:border-slate-700">
                                 ${item.role}
                             </span>
                         </div>
+                        
                         <div class="col-span-1 text-right text-xs font-mono text-slate-400">${item.date}</div>
                     </div>
                 `;
@@ -445,11 +477,16 @@
                 const mobileHTML = `
                     <a href="${item.link}" target="_blank" class="block md:hidden bg-white dark:bg-[#151515] p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm active:scale-[0.98] transition-transform">
                         <h3 class="font-bold text-slate-900 dark:text-white mb-2 leading-snug line-clamp-2">${item.title}</h3>
+                        
+                        <!-- 雙標籤並排 -->
                         <div class="flex justify-between items-center text-xs text-slate-500 dark:text-gray-400 mb-3">
-                            <span class="font-medium text-brand-accent truncate max-w-[50%]">${item.client}</span>
-                            <!-- 手機版也加上標籤樣式 -->
-                            <span class="inline-block px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs text-slate-600 dark:text-gray-400 border border-slate-200 dark:border-slate-700">${item.role}</span>
+                            <span class="font-medium text-brand-accent truncate max-w-[40%]">${item.client}</span>
+                            <div class="flex gap-1.5">
+                                <span class="inline-block px-2 py-0.5 rounded text-[10px] font-medium border ${specClass}">${item.spec}</span>
+                                <span class="inline-block px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] text-slate-600 dark:text-gray-400 border border-slate-200 dark:border-slate-700">${item.role}</span>
+                            </div>
                         </div>
+                        
                         <div class="flex justify-between items-end border-t border-gray-100 dark:border-gray-800 pt-3">
                             <div class="flex flex-col gap-1">
                                 <span class="text-xs font-mono text-slate-400">${item.date}</span>
@@ -474,7 +511,6 @@
         // ==========================================
         // 互動邏輯
         // ==========================================
-        
         if (highlightParam) {
             const featuredOption = document.createElement('option');
             featuredOption.value = 'featured';
@@ -483,7 +519,6 @@
             sortSelect.value = 'featured';
             currentSort = 'featured';
         } else {
-            // 預設排序設為 recommend (版主推薦)
             currentSort = 'recommend';
             sortSelect.value = 'recommend';
         }
@@ -506,7 +541,6 @@
         }
 
         render();
-
     </script>
 </body>
 </html>
