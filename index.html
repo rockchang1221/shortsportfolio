@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-TW" class="light">
 <head>
@@ -9,7 +8,8 @@
     <!-- 字型：Noto Sans TC -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -102,20 +102,33 @@
     <!-- 主要內容區 -->
     <main class="flex-grow max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         
-        <!-- 標頭簡介 -->
-        <header class="mb-12 md:mb-16 animate-fade-in-up">
-            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
-                精選短影音作品
+        <!-- 霸氣標頭文案 -->
+        <header class="mb-16 md:mb-24 mt-4 md:mt-10 text-center animate-fade-in-up flex flex-col items-center px-2">
+            
+            <h1 class="font-black tracking-tight flex flex-col gap-2 md:gap-4 w-full">
+                <span class="text-2xl sm:text-3xl md:text-4xl text-slate-800 dark:text-slate-200">累積總觀看數突破</span>
+                <span class="inline-block text-5xl sm:text-6xl md:text-7xl lg:text-[7rem] leading-normal pb-4 text-gradient-gold font-black">
+                    10,000,000+
+                </span>
             </h1>
+            
+            <p class="text-2xl sm:text-3xl md:text-4xl text-slate-500 dark:text-slate-400 font-bold max-w-4xl mt-2 md:mt-4 leading-tight md:leading-relaxed">
+                合作客戶涵蓋 <br class="block md:hidden"> <!-- 手機版強制換行 -->
+                <!-- 螢光筆特效標註關鍵字 -->
+                <span class="text-slate-900 dark:text-white px-1 relative inline-block z-10">
+                    公眾人物
+                    <span class="absolute bottom-1 left-0 w-full h-3 md:h-4 bg-brand-accent/30 -z-10 transform -rotate-1 rounded-sm"></span>
+                </span> 
+                、 
+                <span class="text-slate-900 dark:text-white px-1 relative inline-block z-10">
+                    大型電商品牌
+                    <span class="absolute bottom-1 left-0 w-full h-3 md:h-4 bg-brand-accent/30 -z-10 transform rotate-1 rounded-sm"></span>
+                </span>
+            </p>
         </header>
 
         <!-- 第一區：精選置頂 (Featured) -->
         <section id="featured-section" class="mb-20 animate-fade-in-up" style="animation-delay: 0.1s;">
-            <div class="flex items-center gap-2 mb-6">
-                <i data-lucide="star" class="w-5 h-5 text-brand-accent fill-current"></i>
-                <h2 class="text-xl font-bold text-slate-800 dark:text-white">精選案例</h2>
-            </div>
-            
             <div id="featured-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Javascript will render featured cards here -->
             </div>
@@ -129,24 +142,32 @@
                     <h2 class="text-xl font-bold text-slate-800 dark:text-white">所有作品列表</h2>
                 </div>
 
-                <!-- 排序選單 -->
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-slate-500 dark:text-gray-400">排序：</span>
-                    <div class="relative">
-                        <select id="sort-select" class="bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none shadow-sm">
-                            <option value="recommend">版主推薦 (熱門+最新)</option>
-                            <option value="views">流量 (熱門優先)</option>
-                            <option value="date">日期 (最新優先)</option>
-                            <option value="client">客戶名稱</option>
-                            <option value="category">專案類別</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                <!-- 排序選單 與 規格說明按鈕 -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="hidden sm:inline text-sm text-slate-500 dark:text-gray-400">排序：</span>
+                        <div class="relative">
+                            <select id="sort-select" class="bg-gray-50 dark:bg-neutral-800 border-none text-sm font-medium text-slate-900 dark:text-white rounded-lg py-2 pl-3 pr-8 focus:ring-2 focus:ring-brand-accent cursor-pointer appearance-none shadow-sm">
+                                <option value="recommend">版主推薦 (熱門+最新)</option>
+                                <option value="views">流量 (熱門優先)</option>
+                                <option value="date">日期 (最新優先)</option>
+                                <option value="client">客戶名稱</option>
+                                <option value="category">專案類別</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                        </div>
                     </div>
+                    
+                    <!-- 規格說明按鈕 -->
+                    <button onclick="openSpecModal()" class="flex items-center gap-1.5 text-sm text-slate-600 dark:text-gray-300 hover:text-brand-accent dark:hover:text-brand-accent bg-gray-100 dark:bg-neutral-800 px-3 py-2 rounded-lg transition-colors shadow-sm">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                        <span class="font-medium hidden sm:inline">規格說明</span>
+                        <span class="font-medium sm:hidden">規格</span>
+                    </button>
                 </div>
             </div>
 
             <!-- 列表容器 (標題列) -->
-            <!-- 為了塞下規格標籤，微調了 col-span 的比例 -->
             <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-800">
                 <div class="col-span-4">專案名稱 / 連結</div>
                 <div class="col-span-2">客戶</div>
@@ -166,38 +187,115 @@
     <!-- 頁尾 -->
     <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a1a1a] mt-20">
         <div class="max-w-screen-xl mx-auto py-10 px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-slate-500 text-sm">© 2026 Video Portfolio.</p>
-            <div class="flex gap-6">
-                <a href="https://www.instagram.com/rrock.1221?igsh=MWo1M3QwYjdlZGFtZg==" target="_blank" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="mailto:rainchang931221@gmail.com" class="text-slate-400 hover:text-brand-accent transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
+            <p class="text-slate-500 text-sm">Copyright © 2026. ROCK Studio 版權所有</p>
+            <div class="flex gap-6 items-center">
+                <!-- LINE (文字版 Icon) -->
+                <a href="https://line.me/ti/p/8kM_gK7qbA" target="_blank" class="flex items-center text-slate-400 hover:text-[#06C755] transition-colors">
+                    <span class="text-base font-black tracking-wider uppercase">LINE</span>
+                </a>
+                <!-- Email (維持 Icon) -->
+                <a href="mailto:rainchang931221@gmail.com" class="text-slate-400 hover:text-brand-accent transition-colors">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                </a>
             </div>
         </div>
     </footer>
 
+    <!-- 規格說明 Modal (加上漸入與縮放動畫) -->
+    <div id="spec-modal" class="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none" onclick="closeSpecModal(event)">
+        <!-- 內部內容區塊加入 scale 動畫 -->
+        <div id="spec-modal-content" class="bg-white dark:bg-[#1a1a1a] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-black/20">
+                <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-brand-accent"></i>
+                    製作規格說明
+                </h3>
+                <button onclick="closeSpecModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-md transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                
+                <div>
+                    <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800 rounded-md text-sm font-bold mb-3">
+                        標準製作規格
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-600 dark:text-gray-400 ml-1">
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent mt-0.5 shrink-0"></i> 俐落剪輯與高完播率節奏編排</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent mt-0.5 shrink-0"></i> 清晰易讀的標準字幕與關鍵字提示</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent mt-0.5 shrink-0"></i> 適合日常社群更新、高頻率資訊傳遞</li>
+                    </ul>
+                </div>
+
+                <div class="pt-6 border-t border-gray-100 dark:border-gray-800">
+                    <div class="inline-block px-3 py-1 bg-amber-100 text-amber-700 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 rounded-md text-sm font-bold mb-3">
+                        Premium 製作規格
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-600 dark:text-gray-400 ml-1">
+                        <li class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-amber-500 mt-0.5 shrink-0"></i> 專屬客製化綜藝字體設計與動態文字包裝</li>
+                        <li class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-amber-500 mt-0.5 shrink-0"></i> 精準影音節奏對位（配合進階音效與轉場設計）</li>
+                        <li class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-amber-500 mt-0.5 shrink-0"></i> 視覺層次優化，適合重點廣告、公眾人物形象塑造</li>
+                    </ul>
+                </div>
+
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-black/20 text-center">
+                <button onclick="closeSpecModal()" class="px-6 py-2 bg-slate-800 hover:bg-slate-900 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-slate-900 text-sm font-bold rounded-lg transition-colors w-full sm:w-auto">
+                    我瞭解了！
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // ==========================================
-        // 1. 自動顏色標籤系統 (自動判別 Premium)
-        // ==========================================
-        // 只要 spec 包含 "Premium" 或 "premium"，就會自動給金色的樣式
         function getSpecStyle(spec, type) {
             const isPremium = spec && spec.toLowerCase().includes('premium');
             
             if (type === 'featured') {
-                // 圖片上的徽章樣式
                 return isPremium 
-                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-white border-yellow-300/50 shadow-lg" // Premium 金色
-                    : "bg-blue-600/90 text-white border-blue-400/50"; // 標準 藍色
+                    ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-white border-yellow-300/50 shadow-lg" 
+                    : "bg-blue-600/90 text-white border-blue-400/50"; 
             } else {
-                // 列表上的標籤樣式
                 return isPremium
-                    ? "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" // Premium 金色底
-                    : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"; // 標準 藍色底
+                    ? "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" 
+                    : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"; 
             }
         }
 
-        // ==========================================
-        // 2. 資料設定 (已加入 spec 屬性)
-        // ==========================================
+        // Modal 控制邏輯 (漸入漸出與縮放動畫)
+        function openSpecModal() {
+            const modal = document.getElementById('spec-modal');
+            const content = document.getElementById('spec-modal-content');
+            
+            // 移除隱藏屬性，觸發動畫
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeSpecModal(event) {
+            // 如果有傳入 event 且點擊的不是背景遮罩本身，則不關閉
+            if (event && event.target !== document.getElementById('spec-modal')) {
+                return;
+            }
+            const modal = document.getElementById('spec-modal');
+            const content = document.getElementById('spec-modal-content');
+            
+            // 恢復隱藏屬性，觸發退場動畫
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
         const portfolioData = [
             // --- 精選置頂 (6部) ---
             {
@@ -207,7 +305,7 @@
                 category: "保健食品",
                 date: "2025-12-02",
                 role: "後製剪輯",
-                spec: "標準製作規格", // 您可隨意改為 "Premium製作規格" 測試效果
+                spec: "標準製作規格",
                 views: 1510000,
                 link: "https://www.facebook.com/share/v/16rJpEQuaV/?mibextid=wwXIfr",
                 thumbnail: "i01.png"
@@ -230,8 +328,8 @@
                 client: "立法委員何欣純",
                 category: "政治人物",
                 date: "2025-06-20",
-                role: "Premium製作規格",
-                spec: "標準製作規格",
+                role: "後製剪輯",
+                spec: "Premium製作規格",
                 views: 137000,
                 link: "https://www.facebook.com/share/r/1K8hLL7ivb/?mibextid=wwXIfr",
                 thumbnail: "i03.png"
@@ -243,7 +341,7 @@
                 category: "汽車保養",
                 date: "2025-12-18",
                 role: "後製剪輯",
-                spec: "Premium製作規格", // 預設一個 Premium 給您看效果
+                spec: "標準製作規格",
                 views: 136000,
                 link: "https://www.facebook.com/share/v/1DTYazA1SM/?mibextid=wwXIfr",
                 thumbnail: "i04.png"
@@ -266,8 +364,8 @@
                 client: "扒扒飯有限公司",
                 category: "食品相關",
                 date: "2025-11-06",
-                role: "Premium製作規格",
-                spec: "標準製作規格",
+                role: "後製剪輯",
+                spec: "Premium製作規格",
                 views: 998000,
                 link: "https://www.facebook.com/share/r/1FTzpe14t2/?mibextid=wwXIfr",
                 thumbnail: "i06.png"
