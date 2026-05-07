@@ -354,7 +354,7 @@
                 date: "2025-07-15",
                 role: "企拍剪全案製作",
                 spec: "Premium製作規格",
-                views: ,
+                views: "未公開發佈",
                 link: "https://youtube.com/shorts/NhtNwPACqbk?feature=share",
                 thumbnail: "i05.png"
             },
@@ -429,10 +429,15 @@
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
 
-        // 數字格式化
+        // 數字格式化 (智慧判別：數字加逗號，文字直接顯示)
         function formatNumber(input) {
-            if (typeof input !== 'number') return "-";
-            return input.toLocaleString('en-US'); 
+            if (typeof input === 'number') {
+                return input.toLocaleString('en-US'); 
+            }
+            if (typeof input === 'string' && input.trim() !== '') {
+                return input; // 如果有填寫文字，就直接顯示文字
+            }
+            return "-"; // 如果是空的，就顯示一條橫線
         }
 
         // 圖片載入失敗處理
